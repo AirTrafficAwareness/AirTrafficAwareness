@@ -1,0 +1,7 @@
+{
+  "name": "TCAS",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
