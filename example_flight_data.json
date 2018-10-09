@@ -1,0 +1,18 @@
+[
+  {
+    "flightNumber": "FDX160",
+    "groundSpeed": "489.6",
+    "altitude": 38550,
+    "latitude": 39.123123,
+    "longitude": -95.123643,
+    "lastUpdateDate": 1539127546.456623
+  },
+  {
+    "flightNumber": "FDX222",
+    "groundSpeed": "659.1",
+    "altitude": 12250,
+    "latitude": 44.123123,
+    "longitude": -96.123643,
+    "lastUpdateDate": 1539127986.451398
+  }
+]
