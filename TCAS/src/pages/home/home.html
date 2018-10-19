@@ -1,17 +1,32 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>Home</ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-content style="background-color: #332B2B">
+  <svg id="svg" viewBox="0 0 720 720" id="svg" style="height: 100%; width: 100%" padding>
 
-<ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+    <g id="notice">
+      <path d="M 360, 360
+m 0, -360 a 360, 360, 0, 1, 0, 1, 0 Z
+m 0, 120 a 240, 240, 0, 1, 1, -1, 0 Z"></path>
+      <circle r="360" cx="360" cy="360"></circle>
+    </g>
+
+    <g id="caution">
+      <path d="M 360, 360
+m 0, -240 a 240, 240, 0, 1, 0, 1, 0 Z
+m 0, 120 a 120, 120, 0, 1, 1, -1, 0 Z"></path>
+      <circle r="240" cx="360" cy="360"></circle>
+    </g>
+
+    <g id="danger">
+      <path d="M 360, 360
+m 0, -120 a 120, 120, 0, 1, 0, 1, 0 Z"></path>
+      <circle r="120" cx="360" cy="360"></circle>
+    </g>
+
+    <circle r="2" cx="360" cy="360" fill="#fff" fill-opacity="1" stroke-width="0"></circle>
+
+    <g id="airplane" class="safe">
+      <path d="M-22,0 L-24,-8 L-20,-8 L-16,-2 L-6,-3 L-12,-24 L-6,-24 L6,-4 L12,-4 C18,-4 24,-2 24,0
+               C24,2 18,4 12,4 L6,4 L-6,24 L-12,24 L-6,3 L-16,2 L-20,8 L-24,8 L-22,0 Z"></path>
+    </g>
+
+  </svg>
 </ion-content>
