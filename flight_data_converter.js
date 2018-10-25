@@ -14,11 +14,12 @@ function convert(dump1090Data){
 	jQuery.each(dump1090Date['aircraft'], function(i, val) {
 		if(val['alt_geom'] != undefined){
 			airplane = {};
-			airplane["flightNumber"]= val['flight'];
+			airplane["identifier"]= val['hex'];
 			airplane["groundSpeed"] = val['gs'];
 			airplane["altitude"] = val['alt_geom'];
 			airplane["latitude"] = val['lat'];
 			airplane["longitude"] = val['lon'];
+			airplane["heading"] = val['track'];
 			airplane["lastUpdateDate"] = dump1090Date['now'];
 			airplaneList.push(airplane);
 		}
