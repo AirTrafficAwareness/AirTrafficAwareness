@@ -5,6 +5,7 @@ import {Response} from "express";
 import {AirplaneProtocol} from "./airplaneProtocol";
 import {TcasEngine} from "./engine";
 import {ClientProtocol} from "./clientProtocol";
+import { Dump1090} from "./dump1090";
 
 class App {
 
@@ -28,11 +29,13 @@ class App {
             });
         });
 
-        const clientListener: ClientProtocol = <any>{};
-        const dataSource: AirplaneProtocol = <any>{};
+       const clientListener: ClientProtocol = <any>{};
+        const dataSource: AirplaneProtocol = new Dump1090(console.log);
         const engine = new TcasEngine();
 
+        // console.log; for debugging
         dataSource.onReceivedData = engine.generateDistances;
+        //dataSource.onReceivedData = console.log;
         clientListener.onClientConnected = engine.setClentAirplaneIdenifier;
         engine.onReceivedData = clientListener.send;
     }
