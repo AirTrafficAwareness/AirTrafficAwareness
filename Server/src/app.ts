@@ -30,7 +30,7 @@ class App {
         });
 
        const clientListener: ClientProtocol = <any>{};
-        const dataSource: AirplaneProtocol = new Dump1090(console.log);
+        const dataSource: AirplaneProtocol = new Dump1090();
         const engine = new TcasEngine();
 
         // console.log; for debugging

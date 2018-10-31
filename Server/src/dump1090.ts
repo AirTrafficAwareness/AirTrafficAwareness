@@ -5,9 +5,7 @@ import * as request from 'request'
 
 export class Dump1090 extends AirplaneProtocol {
 
-    constructor(callback) {
-        super();
-        this.onReceivedData = callback;
+    start() {
         //this.onReceivedData([]);
         //Dump1090 device ip address
        request('http://192.168.1.18:8080/data/aircraft.json',{json:true},(err,res,body)=>{
@@ -21,11 +19,11 @@ export class Dump1090 extends AirplaneProtocol {
 
         let airplane = {};
         let airplaneList = [];
-        if(!Array.isArray(dump1090Data)){
+        if(!dump1090Data || !Array.isArray(dump1090Data['aircraft'])){
             return [];
         }
 
-        dump1090Data.forEach(function (val,i) {
+        dump1090Data['aircraft'].forEach(function (val) {
             if (val['alt_geom'] != undefined) {
 
                 airplane["identifier"] = val['hex'];
