@@ -1,5 +1,10 @@
 import {Airplane} from "./airplane";
 
+interface ReceivedDataFunction {
+    (airplanes: Airplane[]): void;
+}
+
 export abstract class AirplaneProtocol {
-    public onReceivedData: (airplanes: Airplane[]) => void;
+    public onReceivedData: ReceivedDataFunction = (() => {});
+    public start() {}
 }
