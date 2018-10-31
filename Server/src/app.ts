@@ -27,10 +27,10 @@ class App {
         const engine = new TcasEngine();
 
         // console.log; for debugging
-        dataSource.onReceivedData = engine.generateDistances;
+        dataSource.onReceivedData = data => engine.generateDistances(data);
         //dataSource.onReceivedData = console.log;
-        clientListener.onClientConnected = engine.setClentAirplaneIdenifier;
-        engine.onGeneratedDistances = clientListener.send;
+        clientListener.onClientConnected = identifier => engine.setClentAirplaneIdenifier(identifier);
+        engine.onGeneratedDistances = data => clientListener.send(data);
 
         this.app.route('/').get((req: Request, res: Response) => {
             dataSource.start();
