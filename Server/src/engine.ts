@@ -1,7 +1,11 @@
-import {Airplane} from './airplane';
-import {AirplaneProtocol} from './airplaneProtocol';
+import {Airplane, AirplaneData} from './airplane';
 
-export class TcasEngine extends AirplaneProtocol {
+interface CallbackFunction {
+    (airplanes: AirplaneData[]): void;
+}
+
+export class TcasEngine {
+    public onGeneratedDistances: CallbackFunction = (() => {});
     public aircraftInfoJson;
     aircraftFlightInfo: JSON;
     myAircraft: JSON;
@@ -11,8 +15,8 @@ export class TcasEngine extends AirplaneProtocol {
     watchDistance: number;
     private timer;
 
-    generateDistances(tempAircraftInfo: [Airplane]) {
-        const airplanes = tempAircraftInfo.map(aircraft => {
+    generateDistances(tempAircraftInfo: Airplane[]) {
+        const airplanes = tempAircraftInfo.map((aircraft: AirplaneData) => {
             // the haversine formula takes 2 points(latlong) and finds the distances between them.
             // generally takes around 5 ms to calculate
             var R = 6371e3; // metres
@@ -40,7 +44,7 @@ export class TcasEngine extends AirplaneProtocol {
             return aircraft;
         });
 
-        this.onReceivedData(airplanes);
+        this.onGeneratedDistances(airplanes);
     }
 
     updateZones() {

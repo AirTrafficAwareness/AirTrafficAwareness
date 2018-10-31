@@ -36,7 +36,7 @@ class App {
         dataSource.onReceivedData = engine.generateDistances;
         //dataSource.onReceivedData = console.log;
         clientListener.onClientConnected = engine.setClentAirplaneIdenifier;
-        engine.onReceivedData = clientListener.send;
+        engine.onGeneratedDistances = clientListener.send;
     }
 
 }
