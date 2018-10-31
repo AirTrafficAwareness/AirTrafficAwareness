@@ -22,12 +22,6 @@ class App {
             next();
         });
 
-        this.app.route('/').get((req: Request, res: Response) => {
-            res.status(200).send({
-                message: 'GET request successfulll!!!!'
-            });
-        });
-
        const clientListener: ClientProtocol = <any>{};
         const dataSource: AirplaneProtocol = new Dump1090();
         const engine = new TcasEngine();
@@ -37,6 +31,13 @@ class App {
         //dataSource.onReceivedData = console.log;
         clientListener.onClientConnected = engine.setClentAirplaneIdenifier;
         engine.onGeneratedDistances = clientListener.send;
+
+        this.app.route('/').get((req: Request, res: Response) => {
+            dataSource.start();
+            res.status(200).json({
+                webSocketPort: 8999
+            });
+        });
     }
 
 }
