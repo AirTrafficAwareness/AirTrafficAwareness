@@ -1,5 +1,4 @@
 import * as express from "express";
-import * as bodyParser from "body-parser";
 import {Request} from "express";
 import {Response} from "express";
 import {AirplaneProtocol} from "./airplaneProtocol";
@@ -17,11 +16,11 @@ class App {
     }
 
     private config(): void {
-        // support application/json type post data
-        this.app.use(bodyParser.json());
-
-        //support application/x-www-form-urlencoded post data
-        this.app.use(bodyParser.urlencoded({extended: false}));
+        this.app.use(function (req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
 
         this.app.route('/').get((req: Request, res: Response) => {
             res.status(200).send({
