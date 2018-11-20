@@ -29,7 +29,7 @@ class App {
         // console.log; for debugging
         dataSource.onReceivedData = data => engine.generateDistances(data);
         //dataSource.onReceivedData = console.log;
-        clientListener.onClientConnected = identifier => engine.setClentAirplaneIdenifier(identifier);
+        clientListener.onClientConnected = airplane => engine.clientAirplane = airplane;
         engine.onGeneratedDistances = data => clientListener.send(data);
 
         this.app.route('/').get((req: Request, res: Response) => {
