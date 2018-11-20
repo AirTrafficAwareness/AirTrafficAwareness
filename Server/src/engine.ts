@@ -4,7 +4,7 @@ interface CallbackFunction {
     (airplanes: AirplaneData[]): void;
 }
 
-export class TcasEngine {
+export class ATAEngine {
     public onGeneratedDistances: CallbackFunction = (() => {});
     public aircraftInfoJson;
     aircraftFlightInfo: JSON;
