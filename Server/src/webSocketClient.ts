@@ -28,13 +28,6 @@ export class WebSocketClient extends ClientProtocol {
 
             ws.send(JSON.stringify({ok: 'identify'}));
         });
-
-        //start our server
-        const port = process.env.PORT || 8999;
-        server.listen(port, () => {
-            console.log('WebSocket server listening on port', port);
-        });
-
     }
 
     send(airplanes: AirplaneData[]) {
