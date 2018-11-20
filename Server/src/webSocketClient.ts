@@ -20,9 +20,9 @@ export class WebSocketClient extends ClientProtocol {
                 if (json.identifier) {
                     this.client = ws;
                     this.onClientConnected(json.identifier);
-                    ws.send(JSON.stringify({ok: {message}}));
+                    ws.send(JSON.stringify({ok: {json}}));
                 } else {
-                    ws.send(JSON.stringify({error: {message}}));
+                    ws.send(JSON.stringify({error: {json}}));
                 }
             });
 
@@ -35,7 +35,7 @@ export class WebSocketClient extends ClientProtocol {
             try {
                 this.client.send(JSON.stringify(airplanes));
             } catch (e) {
-                console.log(e);
+                console.error('Error', e);
             }
         }
     }
