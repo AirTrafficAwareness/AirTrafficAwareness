@@ -11,12 +11,12 @@ export interface Point {
 
 export interface Airplane extends Coordinate {
     identifier: string;
-    flightNumber: string;
-    groundSpeed: number;
-    altitude: number;
+    flightNumber?: string;
+    groundSpeed?: number;
+    altitude?: number;
     latitude: number;
     longitude: number;
-    heading: number;
+    heading?: number;
     lastUpdateDate: number;
 }
 
