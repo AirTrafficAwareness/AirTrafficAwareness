@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Connect</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-card *ngIf="!connected">
+    <ion-card-header>Connect to Server</ion-card-header>
+    <ion-list>
+      <ion-item>
+        <ion-label stacked>Server Address</ion-label>
+        <ion-input [placeholder]="defaultServer" [(ngModel)]="serverAddress" clearInput></ion-input>
+      </ion-item>
+    </ion-list>
+    <ion-card-content>
+      <button ion-button block (click)="connect($event)">Connect</button>
+    </ion-card-content>
+
+  </ion-card>
+
+
+  <ion-list *ngIf="connected">
+    <ion-item *ngIf="!airplanes">Searching for Airplanes&hellip;</ion-item>
+    <button ion-item *ngFor="let item of airplanes" (click)="itemSelected(item)">
+      {{ item.identifier }} - {{ item.proximity.distance }}
+    </button>
+  </ion-list>
+</ion-content>
+
