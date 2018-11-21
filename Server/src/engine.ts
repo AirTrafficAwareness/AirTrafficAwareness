@@ -47,20 +47,16 @@ export class ATAEngine {
     }
 
     calculateDistance(airplane) {
-        // the haversine formula takes 2 points(latlong) and finds the distances between them.
-        // generally takes around 5 ms to calculate
-        var R = 6371e3; // metres
-        var φ1 = toRadians(ATAEngine.origin.latitude);
-        var φ2 = toRadians(airplane.latitude);
-        var Δφ = toRadians(airplane.latitude - ATAEngine.origin.latitude);
-        var Δλ = toRadians(airplane.longitude - ATAEngine.origin.longitude);
+        const meanEarthRadius = 6371e3; // meters
+        const from = ATAEngine.origin;
+        const to = airplane;
 
-        var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const latTo = toRadians(to.latitude);
+        const latFrom = toRadians(from.latitude);
+        const lonD = toRadians(to.longitude - from.longitude);
 
-        return R * c;
+        const {acos, cos, sin} = Math;
+        return acos(sin(latFrom) * sin(latTo) + cos(latFrom) * cos(latTo) * cos(lonD)) * meanEarthRadius;
     }
 
     calculateFlightZone(distance) {
@@ -81,7 +77,26 @@ export class ATAEngine {
     }
 
     calculatePosition(airplane) {
-        return {x: 0, y: 0};
+        const userInterfaceRadius = 360; // points
+        const from = ATAEngine.origin;
+        const to = airplane;
+        const radius = 2 * this.flightZones.notice;
+        const scale = userInterfaceRadius / radius;
+        const lat = toRadians(from.latitude);
+
+        const {PI, cos, sin, acos} = Math;
+
+        // TODO: Replace magic numbers.
+        const longitudeScale = (111415.13 * cos(lat)) - (94.55 * cos(3 * lat)) + (0.12 * cos(5 * lat));
+        const latitudeScale = (111132.09 - (566.05 * cos(2 * lat)) + (1.20 * cos(4 * lat)) - (0.002 * cos(6 * lat)));
+
+        const xDistance = (to.longitude - from.longitude) * longitudeScale;
+        const yDistance = (to.latitude - from.latitude) * latitudeScale;
+
+        const x = xDistance * scale + userInterfaceRadius;
+        const y = yDistance * scale + userInterfaceRadius;
+
+        return {x, y};
     }
 }
 
