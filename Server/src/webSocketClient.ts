@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import {ClientProtocol} from "./clientProtocol";
-import {AirplaneData} from "./airplane";
+import {Airplane} from "./airplane";
 import {Application} from "express";
 import * as http from "http";
 
@@ -30,7 +30,7 @@ export class WebSocketClient extends ClientProtocol {
         });
     }
 
-    send(airplanes: AirplaneData[]) {
+    send(airplanes: Airplane[]) {
         if (this.client && this.client.OPEN) {
             try {
                 this.client.send(JSON.stringify(airplanes));

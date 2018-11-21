@@ -9,6 +9,12 @@ export interface Point {
     y: number;
 }
 
+export interface Proximity {
+    distance: number;
+    flightZone: string;
+    position: Point;
+}
+
 export interface Airplane extends Coordinate {
     identifier: string;
     flightNumber?: string;
@@ -18,11 +24,5 @@ export interface Airplane extends Coordinate {
     longitude: number;
     heading?: number;
     lastUpdateDate: number;
-}
-
-export interface AirplaneData extends Airplane, Point {
-    distance: number;
-    flightZone: string;
-    x: number;
-    y: number;
+    proximity?: Proximity;
 }

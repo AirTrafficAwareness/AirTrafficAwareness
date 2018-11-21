@@ -1,7 +1,7 @@
-import {Airplane, AirplaneData} from './airplane';
+import {Airplane} from './airplane';
 
 interface CallbackFunction {
-    (airplanes: AirplaneData[]): void;
+    (airplanes: Airplane[]): void;
 }
 
 export class ATAEngine {
@@ -16,7 +16,7 @@ export class ATAEngine {
             return tempAircraftInfo;
         }
 
-        const airplanes = tempAircraftInfo.map((airplane: AirplaneData) => {
+        const airplanes = tempAircraftInfo.map((airplane: Airplane) => {
             if (airplane.identifier == this.clientAirplane.identifier) {
                 this.clientAirplane = airplane;
                 return airplane;
@@ -35,17 +35,20 @@ export class ATAEngine {
                 Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
             var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-            airplane.distance = R * c;
+            const proximity = {distance: R * c, flightZone: '', position: {x: 0, y: 0}};
 
-            if (airplane.distance > this.watchDistance) {
-                airplane.flightZone = 'safe';
-            } else if (airplane.distance > this.warningDistance) {
-                airplane.flightZone = 'notice';
-            } else if (airplane.distance > this.dangerDistance) {
-                airplane.flightZone = 'caution';
+            if (proximity.distance > this.watchDistance) {
+                proximity.flightZone = 'safe';
+            } else if (proximity.distance > this.warningDistance) {
+                proximity.flightZone = 'notice';
+            } else if (proximity.distance > this.dangerDistance) {
+                proximity.flightZone = 'caution';
             } else {
-                airplane.flightZone = 'danger';
+                proximity.flightZone = 'danger';
             }
+
+            airplane.proximity = proximity;
+
             return airplane;
         });
 
