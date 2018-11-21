@@ -80,7 +80,7 @@ export class ATAEngine {
         const userInterfaceRadius = 360; // points
         const from = ATAEngine.origin;
         const to = airplane;
-        const radius = 2 * this.flightZones.notice;
+        const radius = this.flightZones.notice;
         const scale = userInterfaceRadius / radius;
         const lat = toRadians(from.latitude);
 
