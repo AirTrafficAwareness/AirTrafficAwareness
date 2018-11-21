@@ -4,7 +4,7 @@ interface ReceivedDataFunction {
     (airplanes: Airplane[]): void;
 }
 
-export abstract class AirplaneProtocol {
+export abstract class DataSourceProtocol {
     public onReceivedData: ReceivedDataFunction = (() => {});
     public start() {}
 }

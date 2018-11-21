@@ -1,9 +1,9 @@
 import {Airplane} from './airplane';
-import {AirplaneProtocol} from './airplaneProtocol';
+import {DataSourceProtocol} from './dataSourceProtocol';
 import * as request from 'request'
 
 
-export class Dump1090 extends AirplaneProtocol {
+export class Dump1090 extends DataSourceProtocol {
 
     start() {
         //this.onReceivedData([]);

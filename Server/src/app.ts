@@ -1,6 +1,6 @@
 import * as express from "express";
 import {Request, Response} from "express";
-import {AirplaneProtocol} from "./airplaneProtocol";
+import {DataSourceProtocol} from "./dataSourceProtocol";
 import {ATAEngine} from "./engine";
 import {ClientProtocol} from "./clientProtocol";
 import {Dump1090} from "./dump1090";
@@ -23,7 +23,7 @@ class App {
         });
 
         const clientListener: ClientProtocol = new WebSocketClient(this.app);
-        const dataSource: AirplaneProtocol = new Dump1090();
+        const dataSource: DataSourceProtocol = new Dump1090();
         const engine = new ATAEngine();
 
         // console.log; for debugging
