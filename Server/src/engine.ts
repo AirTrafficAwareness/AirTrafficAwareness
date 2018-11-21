@@ -1,4 +1,4 @@
-import {Airplane} from './airplane';
+import {Airplane, Coordinate} from './airplane';
 
 type CallbackFunction = (airplanes: Airplane[]) => void;
 type FlightZones = { danger: number, caution: number, notice: number };
@@ -11,6 +11,10 @@ export class ATAEngine {
     determineProximity(airplanes: Airplane[]) {
         if (!ATAEngine.origin) {
             return airplanes;
+        }
+
+        if (!this.flightZones) {
+            this.updateZones();
         }
 
         airplanes.forEach(airplane => {
