@@ -13,15 +13,19 @@ export class ATAEngine {
             return airplanes;
         }
 
+        if ((<Airplane>ATAEngine.origin).identifier) {
+            const updated = airplanes.find(airplane => airplane.identifier === ATAEngine.origin.identifier);
+            if (updated) {
+                ATAEngine.origin = updated;
+                this.updateZones();
+            }
+        }
+
         if (!this.flightZones) {
             this.updateZones();
         }
 
         airplanes.forEach(airplane => {
-            if (airplane.identifier == ATAEngine.origin.identifier) {
-                ATAEngine.origin = airplane;
-            }
-
             const distance = this.calculateDistance(airplane);
             const flightZone = this.calculateFlightZone(distance);
             const position = this.calculatePosition(airplane);
