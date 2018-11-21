@@ -4,6 +4,7 @@ import {DataSourceProtocol} from "./dataSourceProtocol";
 import {ATAEngine} from "./engine";
 import {ClientProtocol} from "./clientProtocol";
 import {Dump1090} from "./dump1090";
+import {OpenSky} from "./opensky";
 import {WebSocketClient} from "./webSocketClient";
 
 class App {
@@ -26,7 +27,7 @@ class App {
     listen(port, callback?: Function) {
         const server = this.app.listen(port, callback);
         const clientListener: ClientProtocol = new WebSocketClient(server);
-        const dataSource: DataSourceProtocol = new Dump1090();
+        const dataSource: DataSourceProtocol = new OpenSky();
         const engine = new ATAEngine();
 
         dataSource.onReceivedData = data => engine.determineProximity(data);
