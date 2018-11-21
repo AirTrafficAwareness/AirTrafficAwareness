@@ -7,9 +7,8 @@ import * as http from "http";
 export class WebSocketClient extends ClientProtocol {
     private client: WebSocket;
 
-    constructor(app: Application) {
+    constructor(server: http.Server) {
         super();
-        const server = http.createServer(app);
         const wss = new WebSocket.Server({ server });
         wss.on('connection', (ws: WebSocket) => {
 

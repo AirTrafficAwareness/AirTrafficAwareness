@@ -21,8 +21,11 @@ class App {
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
             next();
         });
+    }
 
-        const clientListener: ClientProtocol = new WebSocketClient(this.app);
+    listen(port, callback?: Function) {
+        const server = this.app.listen(port, callback);
+        const clientListener: ClientProtocol = new WebSocketClient(server);
         const dataSource: DataSourceProtocol = new Dump1090();
         const engine = new ATAEngine();
 
@@ -34,12 +37,10 @@ class App {
 
         this.app.route('/').get((req: Request, res: Response) => {
             dataSource.start();
-            res.status(200).json({
-                webSocketPort: 8999
-            });
+            res.json({ok: req.query});
         });
     }
 
 }
 
-export default new App().app;
+export default new App();
