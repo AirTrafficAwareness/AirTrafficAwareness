@@ -29,9 +29,7 @@ class App {
         const dataSource: DataSourceProtocol = new Dump1090();
         const engine = new ATAEngine();
 
-        // console.log; for debugging
-        dataSource.onReceivedData = data => engine.generateDistances(data);
-        //dataSource.onReceivedData = console.log;
+        dataSource.onReceivedData = data => engine.determineProximity(data);
         clientListener.onClientConnected = airplane => engine.clientAirplane = airplane;
         engine.onGeneratedDistances = data => clientListener.send(data);
 
