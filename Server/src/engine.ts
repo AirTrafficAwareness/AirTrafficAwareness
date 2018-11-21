@@ -1,13 +1,12 @@
 import {Airplane} from './airplane';
 
 type CallbackFunction = (airplanes: Airplane[]) => void;
+type FlightZones = { danger: number, caution: number, notice: number };
 
 export class ATAEngine {
     public onGeneratedDistances: CallbackFunction = (() => {});
     clientAirplane: Airplane;
-    dangerDistance:  number =  75000;
-    warningDistance: number = 150000;
-    watchDistance:   number = 220000;
+    flightZones: FlightZones;
 
     determineProximity(tempAircraftInfo: Airplane[]) {
         if (!this.clientAirplane) {
@@ -33,7 +32,13 @@ export class ATAEngine {
     }
 
     updateZones() {
-
+        // TODO: Calculate zones based on velocity, or use proper heuristic values.
+        const radius = 9260; // 5 nautical miles
+        this.flightZones = {
+            danger: radius,
+            caution: radius * 2,
+            notice: radius * 3,
+        };
     }
 
     calculateDistance(airplane) {
@@ -54,18 +59,20 @@ export class ATAEngine {
     }
 
     calculateFlightZone(distance) {
-        let flightZone = '';
-        if (distance > this.watchDistance) {
-            flightZone = 'safe';
-        } else if (distance > this.warningDistance) {
-            flightZone = 'notice';
-        } else if (distance > this.dangerDistance) {
-            flightZone = 'caution';
-        } else {
-            flightZone = 'danger';
+        const {danger, caution, notice} = this.flightZones;
+        if (distance <= danger) {
+            return 'danger';
         }
 
-        return flightZone;
+        if (distance <= caution) {
+            return 'caution';
+        }
+
+        if (distance <= notice) {
+            return 'notice';
+        }
+
+        return 'safe';
     }
 
     calculatePosition(airplane) {
