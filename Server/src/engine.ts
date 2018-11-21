@@ -5,18 +5,17 @@ type FlightZones = { danger: number, caution: number, notice: number };
 
 export class ATAEngine {
     public onGeneratedDistances: CallbackFunction = (() => {});
-    clientAirplane: Airplane;
+    static origin: Airplane;
     flightZones: FlightZones;
 
-    determineProximity(tempAircraftInfo: Airplane[]) {
-        if (!this.clientAirplane) {
-            return tempAircraftInfo;
+    determineProximity(airplanes: Airplane[]) {
+        if (!ATAEngine.origin) {
+            return airplanes;
         }
 
-        const airplanes = tempAircraftInfo.map((airplane: Airplane) => {
-            if (airplane.identifier == this.clientAirplane.identifier) {
-                this.clientAirplane = airplane;
-                return airplane;
+        airplanes.forEach(airplane => {
+            if (airplane.identifier == ATAEngine.origin.identifier) {
+                ATAEngine.origin = airplane;
             }
 
             const distance = this.calculateDistance(airplane);
@@ -24,8 +23,6 @@ export class ATAEngine {
             const position = this.calculatePosition(airplane);
 
             airplane.proximity = {distance, flightZone, position};
-
-            return airplane;
         });
 
         this.onGeneratedDistances(airplanes);
@@ -45,10 +42,10 @@ export class ATAEngine {
         // the haversine formula takes 2 points(latlong) and finds the distances between them.
         // generally takes around 5 ms to calculate
         var R = 6371e3; // metres
-        var φ1 = toRadians(this.clientAirplane.latitude);
+        var φ1 = toRadians(ATAEngine.origin.latitude);
         var φ2 = toRadians(airplane.latitude);
-        var Δφ = toRadians(airplane.latitude - this.clientAirplane.latitude);
-        var Δλ = toRadians(airplane.longitude - this.clientAirplane.longitude);
+        var Δφ = toRadians(airplane.latitude - ATAEngine.origin.latitude);
+        var Δλ = toRadians(airplane.longitude - ATAEngine.origin.longitude);
 
         var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
             Math.cos(φ1) * Math.cos(φ2) *
