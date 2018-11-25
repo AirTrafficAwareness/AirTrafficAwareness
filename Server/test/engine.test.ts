@@ -4,7 +4,7 @@ import * as assert from 'assert';
 describe('ATAEngine', () => {
     it('should calculate the distance between airplanes', () => {
         const engine = new ATAEngine();
-        engine.clientAirplane =  {
+        ATAEngine.origin =  {
             identifier: 'BNA',
             latitude: 36.12,
             longitude: -86.67,
