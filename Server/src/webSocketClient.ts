@@ -1,11 +1,41 @@
 import * as WebSocket from 'ws';
 import {ClientProtocol} from "./clientProtocol";
-import {AirplaneData} from "./airplane";
+import {Airplane} from "./airplane";
+import {Application} from "express";
+import * as http from "http";
 
-class WebSocketClient extends ClientProtocol {
+export class WebSocketClient extends ClientProtocol {
     private client: WebSocket;
 
-    send(airplanes: AirplaneData[]) {
-        this.client.send(JSON.stringify(airplanes));
+    constructor(server: http.Server) {
+        super();
+        const wss = new WebSocket.Server({ server });
+        wss.on('connection', (ws: WebSocket) => {
+            this.client = ws;
+            ws.on('message', (message: string) => {
+                console.debug('WebSocketClient received message:', message);
+
+                const json = JSON.parse(message);
+                if (json.identifier) {
+                    this.onClientConnected(json);
+                    ws.send(JSON.stringify({ok: {json}}));
+                } else {
+                    ws.send(JSON.stringify({error: {json}}));
+                }
+            });
+
+            ws.send(JSON.stringify({ok: 'identify'}));
+        });
+    }
+
+    send(airplanes: Airplane[]) {
+        if (this.client && this.client.OPEN) {
+            try {
+                this.client.send(JSON.stringify(airplanes));
+            } catch (e) {
+                this.client = null;
+                console.error('Error', e);
+            }
+        }
     }
 }

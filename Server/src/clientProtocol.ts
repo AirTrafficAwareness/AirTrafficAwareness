@@ -1,6 +1,6 @@
-import {AirplaneData} from "./airplane";
+import {Airplane} from "./airplane";
 
 export abstract class ClientProtocol {
-    public onClientConnected: (identifier: string) => void;
-    public abstract send(airplanes: AirplaneData[]);
+    public onClientConnected: (airplane: Airplane) => void;
+    public abstract send(airplanes: Airplane[]);
 }

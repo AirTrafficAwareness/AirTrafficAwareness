@@ -1,55 +1,102 @@
-import {Airplane} from './airplane';
-import {AirplaneProtocol} from './airplaneProtocol';
+import {Airplane, Coordinate} from './airplane';
 
-export class TcasEngine extends AirplaneProtocol {
-    public aircraftInfoJson;
-    aircraftFlightInfo: JSON;
-    myAircraft: JSON;
-    aircraftJson: JSON;
-    dangerDistance: number;
-    warningDistance: number;
-    watchDistance: number;
-    private timer;
+type CallbackFunction = (airplanes: Airplane[]) => void;
+type FlightZones = { danger: number, caution: number, notice: number };
 
-    generateDistances(tempAircraftInfo: [Airplane]) {
-        const airplanes = tempAircraftInfo.map(aircraft => {
-            // the haversine formula takes 2 points(latlong) and finds the distances between them.
-            // generally takes around 5 ms to calculate
-            var R = 6371e3; // metres
-            var φ1 = toRadians(this.myAircraft['lat1']);
-            var φ2 = toRadians(aircraft['lat2']);
-            var Δφ = toRadians(aircraft['lat2'] - this.myAircraft['lat1']);
-            var Δλ = toRadians(aircraft['lon2'] - this.myAircraft['lon1']);
+export class ATAEngine {
+    public onGeneratedDistances: CallbackFunction = (() => {});
+    static origin: Airplane;
+    flightZones: FlightZones;
 
-            var a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    determineProximity(airplanes: Airplane[]) {
+        if (!ATAEngine.origin) {
+            return airplanes;
+        }
 
-            aircraft['distance'] = R * c;
-
-            if (aircraft['distance'] > this.watchDistance) {
-                aircraft['flightZone'] = 'safe';
-            } else if (aircraft['distance'] > this.warningDistance) {
-                aircraft['flightZone'] = 'watch';
-            } else if (aircraft['distance'] > this.dangerDistance) {
-                aircraft['flightZone'] = 'warning';
-            } else {
-                aircraft['flightZone'] = 'danger';
+        if ((<Airplane>ATAEngine.origin).identifier) {
+            const updated = airplanes.find(airplane => airplane.identifier === ATAEngine.origin.identifier);
+            if (updated) {
+                ATAEngine.origin = updated;
+                this.updateZones();
             }
-            return aircraft;
+        }
+
+        if (!this.flightZones) {
+            this.updateZones();
+        }
+
+        airplanes.forEach(airplane => {
+            const distance = this.calculateDistance(airplane);
+            const flightZone = this.calculateFlightZone(distance);
+            const position = this.calculatePosition(airplane);
+
+            airplane.proximity = {distance, flightZone, position};
         });
 
-        this.onReceivedData(airplanes);
+        this.onGeneratedDistances(airplanes);
     }
 
     updateZones() {
-
+        // TODO: Calculate zones based on velocity, or use proper heuristic values.
+        const radius = 9260; // 5 nautical miles
+        this.flightZones = {
+            danger: radius,
+            caution: radius * 2,
+            notice: radius * 3,
+        };
     }
 
+    calculateDistance(airplane) {
+        const meanEarthRadius = 6371e3; // meters
+        const from = ATAEngine.origin;
+        const to = airplane;
 
-    setClentAirplaneIdenifier(id: string) {
-        // do
+        const latTo = toRadians(to.latitude);
+        const latFrom = toRadians(from.latitude);
+        const lonD = toRadians(to.longitude - from.longitude);
+
+        const {acos, cos, sin} = Math;
+        return acos(sin(latFrom) * sin(latTo) + cos(latFrom) * cos(latTo) * cos(lonD)) * meanEarthRadius;
+    }
+
+    calculateFlightZone(distance) {
+        const {danger, caution, notice} = this.flightZones;
+        if (distance <= danger) {
+            return 'danger';
+        }
+
+        if (distance <= caution) {
+            return 'caution';
+        }
+
+        if (distance <= notice) {
+            return 'notice';
+        }
+
+        return 'safe';
+    }
+
+    calculatePosition(airplane) {
+        const userInterfaceRadius = 360; // points
+        const from = ATAEngine.origin;
+        const to = airplane;
+        const radius = this.flightZones.notice;
+        const scale = userInterfaceRadius / radius;
+        const lat = toRadians(from.latitude);
+
+        const {PI, cos, sin, acos} = Math;
+
+        // TODO: Replace magic numbers.
+        const longitudeScale = (111415.13 * cos(lat)) - (94.55 * cos(3 * lat)) + (0.12 * cos(5 * lat));
+        const latitudeScale = (111132.09 - (566.05 * cos(2 * lat)) + (1.20 * cos(4 * lat)) - (0.002 * cos(6 * lat)));
+
+        const xDistance = (to.longitude - from.longitude) * longitudeScale;
+        const yDistance = (to.latitude - from.latitude) * latitudeScale;
+
+        const x = xDistance * scale + userInterfaceRadius;
+        const y = yDistance * scale + userInterfaceRadius;
+
+        return {x, y};
     }
 }
 

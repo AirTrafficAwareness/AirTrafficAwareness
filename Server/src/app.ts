@@ -1,11 +1,11 @@
 import * as express from "express";
-import * as bodyParser from "body-parser";
-import {Request} from "express";
-import {Response} from "express";
-import {AirplaneProtocol} from "./airplaneProtocol";
-import {TcasEngine} from "./engine";
+import {Request, Response} from "express";
+import {DataSourceProtocol} from "./dataSourceProtocol";
+import {ATAEngine} from "./engine";
 import {ClientProtocol} from "./clientProtocol";
-import { Dump1090} from "./dump1090";
+import {Dump1090} from "./dump1090";
+import {OpenSky} from "./opensky";
+import {WebSocketClient} from "./webSocketClient";
 
 class App {
 
@@ -17,29 +17,36 @@ class App {
     }
 
     private config(): void {
-        // support application/json type post data
-        this.app.use(bodyParser.json());
+        this.app.use(function (req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
+    }
 
-        //support application/x-www-form-urlencoded post data
-        this.app.use(bodyParser.urlencoded({extended: false}));
+    listen(port, callback?: Function) {
+        const server = this.app.listen(port, callback);
+        const clientListener: ClientProtocol = new WebSocketClient(server);
+        const dataSource: DataSourceProtocol = new OpenSky();
+        const engine = new ATAEngine();
+
+        dataSource.onReceivedData = data => engine.determineProximity(data);
+        clientListener.onClientConnected = airplane => ATAEngine.origin = airplane;
+        engine.onGeneratedDistances = data => clientListener.send(data);
 
         this.app.route('/').get((req: Request, res: Response) => {
-            res.status(200).send({
-                message: 'GET request successfulll!!!!'
-            });
+            const latitude = req.query.latitude;
+            const longitude = req.query.longitude;
+            if (!latitude || !longitude) {
+                res.status(400).json({error: {message: 'Query parameters `latitude` and `longitude` are required.'}});
+                return;
+            }
+            ATAEngine.origin = req.query;
+            dataSource.start();
+            res.json({ok: req.query});
         });
-
-       const clientListener: ClientProtocol = <any>{};
-        const dataSource: AirplaneProtocol = new Dump1090(console.log);
-        const engine = new TcasEngine();
-
-        // console.log; for debugging
-        dataSource.onReceivedData = engine.generateDistances;
-        //dataSource.onReceivedData = console.log;
-        clientListener.onClientConnected = engine.setClentAirplaneIdenifier;
-        engine.onReceivedData = clientListener.send;
     }
 
 }
 
-export default new App().app;
+export default new App();

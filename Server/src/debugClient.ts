@@ -1,9 +1,9 @@
 import {ClientProtocol} from "./clientProtocol";
-import {AirplaneData} from "./airplane";
+import {Airplane} from "./airplane";
 
 export class DebugClient extends ClientProtocol {
 
-    send(airplanes: AirplaneData[]) {
+    send(airplanes: Airplane[]) {
         console.debug('Send airplane data to client', airplanes);
     }
 
