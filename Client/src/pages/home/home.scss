@@ -1,5 +1,35 @@
 page-home {
 
+  .dark-background {
+    background: #332B2B;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  text {
+    fill: #fff;
+    fill-opacity: 0.5;
+    alignment-baseline: middle;
+    text-anchor: middle;
+
+    font-family: "SF Mono", SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .north text {
+    fill-opacity: 1;
+  }
+
+  .compass-points {
+    stroke: #0088BF;
+    stroke-width: 4;
+    fill: #000;
+  }
+
   $colors: (
     "notice": #0088BF,
     "caution": #FFD300,
@@ -55,4 +85,3 @@ page-home {
   }
 
 }
-

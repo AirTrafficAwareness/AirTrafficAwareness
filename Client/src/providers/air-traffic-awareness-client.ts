@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {EventEmitter, Injectable} from '@angular/core';
-import {Airplane, Coordinate} from "../models/airplane";
+import {Airplane, Coordinate} from '../models/airplane';
 
 const httpProtocol = `${location.protocol}`; // http: | https:
 const wsProtocol = httpProtocol.replace(/^http/, 'ws'); // ws: | wss:
@@ -10,9 +10,15 @@ export class AirTrafficAwarenessClient {
 
   public onUpdate: EventEmitter<Airplane[]> = new EventEmitter();
   private webSocket;
+  private _currentAirplane: Airplane;
+
+  get currentAirplane() {
+    return this._currentAirplane;
+  }
 
   set currentAirplane(airplane: Airplane) {
     this.webSocket.send(JSON.stringify(airplane));
+    this._currentAirplane = airplane;
   }
 
   constructor(public http: HttpClient) {
@@ -29,7 +35,7 @@ export class AirTrafficAwarenessClient {
     console.log('params?', qs);
     return this.http.get<any>(`${httpProtocol}//${address}/`, {params: qs}).pipe(res => {
       const url = `${wsProtocol}//${address}`;
-      let ws = new WebSocket(url);
+      const ws = new WebSocket(url);
       ws.onmessage = (message) => {
         const json = JSON.parse(message.data);
         console.log('json', json);

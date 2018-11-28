@@ -1,5 +1,5 @@
 {
-  "name": "TCAS",
+  "name": "ATA Client",
   "integrations": {
     "cordova": {}
   },

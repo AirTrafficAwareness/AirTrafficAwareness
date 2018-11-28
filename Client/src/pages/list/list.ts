@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import {AlertController, ViewController} from "ionic-angular";
+import {AlertController, ViewController} from 'ionic-angular';
 import {Geolocation} from '@ionic-native/geolocation';
-import {AirTrafficAwarenessClient} from "../../providers/air-traffic-awareness-client";
-import {Airplane} from "../../models/airplane";
+import {AirTrafficAwarenessClient} from '../../providers/air-traffic-awareness-client';
+import {Airplane} from '../../models/airplane';
 
 @Component({
   selector: 'page-list',
@@ -10,8 +10,8 @@ import {Airplane} from "../../models/airplane";
 })
 export class ListPage {
 
-  public defaultServer = "localhost:3000";
-  public serverAddress = "";
+  public defaultServer = 'localhost:3000';
+  public serverAddress = '';
   public airplanes: Airplane[];
   public connected = false;
 
@@ -35,7 +35,7 @@ export class ListPage {
         .then(() => this.connected = true))
       .catch(error => this.alertController.create({
         title: 'Error',
-        subTitle: error && error.message || 'Unable to connect.',
+        subTitle: error && error.message || 'Unable to connect. ' + JSON.stringify(error),
         buttons: ['OK']
       }).present());
   }
