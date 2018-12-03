@@ -1,7 +1,6 @@
 import * as WebSocket from 'ws';
 import {ClientProtocol} from "./clientProtocol";
 import {Airplane} from "./airplane";
-import {Application} from "express";
 import * as http from "http";
 
 export class WebSocketClient extends ClientProtocol {
@@ -9,7 +8,7 @@ export class WebSocketClient extends ClientProtocol {
 
     constructor(server: http.Server) {
         super();
-        const wss = new WebSocket.Server({ server });
+        const wss = new WebSocket.Server({server});
         wss.on('connection', (ws: WebSocket) => {
             this.client = ws;
             ws.on('message', (message: string) => {

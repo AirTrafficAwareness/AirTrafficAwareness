@@ -38,7 +38,7 @@ export class ATAEngine {
 
     updateZones() {
         // TODO: Calculate zones based on velocity, or use proper heuristic values.
-        const radius = 9260; // 5 nautical miles
+        const radius = 9260 * 3; // 5 nautical miles
         this.flightZones = {
             danger: radius,
             caution: radius * 2,
@@ -84,7 +84,7 @@ export class ATAEngine {
         const scale = userInterfaceRadius / radius;
         const lat = toRadians(from.latitude);
 
-        const {PI, cos, sin, acos} = Math;
+        const {cos} = Math;
 
         // TODO: Replace magic numbers.
         const longitudeScale = (111415.13 * cos(lat)) - (94.55 * cos(3 * lat)) + (0.12 * cos(5 * lat));

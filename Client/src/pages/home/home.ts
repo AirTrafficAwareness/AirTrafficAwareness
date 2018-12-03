@@ -12,7 +12,8 @@ import {Airplane} from '../../models/airplane';
 export class HomePage implements OnInit {
 
   views: { [view: string]: AirplaneView } = {};
-  connected = false;
+  container: SVGGElement;
+  airplaneNode: SVGGElement;
 
   constructor(private modalController: ModalController,
               private popoverController: PopoverController,
@@ -21,9 +22,10 @@ export class HomePage implements OnInit {
 
   ngOnInit(): void {
     const svg = <any>document.getElementById('svg') as SVGSVGElement;
-    const container = svg.getElementById('container') as SVGGElement;
+    this.container = svg.getElementById('container') as SVGGElement;
     const airplaneNode = svg.getElementById('airplane') as SVGGElement;
     airplaneNode.remove();
+    this.airplaneNode = airplaneNode;
 
     if (!this.ata.currentAirplane) {
       const modal = this.modalController.create(ListPage, null, {
@@ -32,7 +34,6 @@ export class HomePage implements OnInit {
       modal.onDidDismiss(data => {
         console.log(data);
         this.ata.currentAirplane = data;
-        this.connected = true;
       });
       modal.present().catch(err => console.error(err));
     }
@@ -42,28 +43,7 @@ export class HomePage implements OnInit {
       Object.values(this.views).forEach(view => view.touched = false);
 
       airplanes.forEach((airplane: Airplane) => {
-        const {heading, identifier, proximity} = airplane;
-
-        if (!proximity || !proximity.position || (!proximity.position.x && !proximity.position.y)) {
-          return;
-        }
-
-        if (this.ata.currentAirplane && identifier === this.ata.currentAirplane.identifier) {
-          container.setAttribute('transform', `rotate(${-heading} 360 360)`);
-        }
-
-        let view = this.views[identifier];
-        if (!view) {
-          const node = airplaneNode.cloneNode(true) as SVGGElement;
-          node.id = identifier;
-          container.appendChild(node);
-          node.onclick = (event) => this.showDetails(event, airplane);
-          view = new AirplaneView(node);
-          this.views[identifier] = view;
-        }
-
-        view.airplane = airplane;
-        view.touched = true;
+        this.updateAirplane(airplane);
       });
 
       // Remove all view that were not updated.
@@ -77,10 +57,35 @@ export class HomePage implements OnInit {
     });
   }
 
-
   showDetails(event: Event, airplane) {
     const popover = this.popoverController.create(DetailsPage, {airplane});
     popover.present({ev: event}).catch(err => console.error(err));
+  }
+
+  private updateAirplane(airplane: Airplane) {
+    const {heading, identifier, proximity} = airplane;
+
+    if (!proximity || !proximity.position || (!proximity.position.x && !proximity.position.y)) {
+      return;
+    }
+
+    let view = this.views[identifier];
+    if (!view) {
+      const node = this.airplaneNode.cloneNode(true) as SVGGElement;
+      node.id = identifier;
+      this.container.appendChild(node);
+      node.onclick = (event) => this.showDetails(event, airplane);
+      view = new AirplaneView(node);
+      this.views[identifier] = view;
+    }
+
+    if (this.ata.currentAirplane && identifier === this.ata.currentAirplane.identifier) {
+      this.container.setAttribute('transform', `rotate(${-heading} 360 360)`);
+      airplane.proximity.flightZone = 'safe';
+    }
+
+    view.airplane = airplane;
+    view.touched = true;
   }
 }
 

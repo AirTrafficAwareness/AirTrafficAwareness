@@ -30,7 +30,8 @@ export class ListPage {
     console.log(event);
     console.log(this.serverAddress);
     const address = this.serverAddress || this.defaultServer;
-    this.location.getCurrentPosition()
+    this.location.getCurrentPosition({enableHighAccuracy: true})
+      .catch(e => {console.log('error', e); return {coords: {latitude: 39.015, longitude: -94.565}}})
       .then(({coords}) => this.ata.connect(address, coords).toPromise()
         .then(() => this.connected = true))
       .catch(error => this.alertController.create({
