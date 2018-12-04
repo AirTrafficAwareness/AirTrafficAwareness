@@ -15,7 +15,16 @@ export interface Proximity {
     position: Point;
 }
 
-export interface Airplane extends Coordinate {
+export interface PotentialCollision {
+    id: string;
+    distanceAwayToPlane: number;
+    distanceAwayToCollision: number;
+    speed: number;
+    heading: number;
+    estimatedTimeOfCollision: number;
+}
+
+export interface Airplane extends Coordinate, Rectangle {
     identifier: string;
     flightNumber?: string;
     groundSpeed?: number;
@@ -24,5 +33,13 @@ export interface Airplane extends Coordinate {
     longitude: number;
     heading?: number;
     lastUpdateDate: number;
+    potentialCollisionList: PotentialCollision[];
     proximity?: Proximity;
+}
+
+export interface Rectangle {
+    minimumXCoordinate: number;
+    maximumXCoordinate: number;
+    minimumYCoordinate: number;
+    maximumYCoordinate: number;
 }
