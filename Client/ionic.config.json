@@ -1,8 +1,7 @@
 {
-  "name": "ATA Client",
+  "name": "Client",
   "integrations": {
     "cordova": {}
   },
-  "type": "ionic-angular",
-  "app_id": ""
+  "type": "angular"
 }

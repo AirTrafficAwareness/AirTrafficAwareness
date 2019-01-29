@@ -1,42 +1,34 @@
-import {ErrorHandler, NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
-import {MyApp} from './app.component';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouteReuseStrategy } from '@angular/router';
 
-import {HomePage} from '../pages/home/home';
-import {ListPage} from "../pages/list/list";
-import {StatusBar} from '@ionic-native/status-bar';
-import {SplashScreen} from '@ionic-native/splash-screen';
-import {HttpClientModule} from "@angular/common/http";
-import {AirTrafficAwarenessClient} from '../providers/air-traffic-awareness-client';
-import {Geolocation} from '@ionic-native/geolocation';
-import {DetailsPage} from "../pages/details/details";
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { DetailsComponent } from './details/details.component';
 
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage,
-    ListPage,
-    DetailsPage
+    AppComponent,
+    DetailsComponent
   ],
+  entryComponents: [],
   imports: [
     BrowserModule,
-    HttpClientModule,
-    IonicModule.forRoot(MyApp)
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    HomePage,
-    ListPage,
-    DetailsPage
+    IonicModule.forRoot(),
+    AppRoutingModule
   ],
   providers: [
-    Geolocation,
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AirTrafficAwarenessClient
-  ]
+    {
+      provide: RouteReuseStrategy,
+      useClass: IonicRouteStrategy
+    }
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
