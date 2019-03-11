@@ -1,10 +1,39 @@
-<ion-content>
-
-  <ion-card-header>
-    <ion-card-title text-capitalize>{{airplane.identifier | uppercase}}</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-    {{airplane.heading}}°<br>{{airplane.proximity.distance}} meters
-  </ion-card-content>
-
-</ion-content>
+<div *ngIf="airplane">
+  <h2 class="mat-title">{{airplane.identifier | uppercase}}
+  <span class="mat-caption">{{airplane.latitude}}, {{airplane.longitude}}</span>
+</h2>
+<mat-grid-list cols="2" [rowHeight]="injected ? '50px' : '150px'">
+  <mat-grid-tile [colspan]="injected ? 1 : 2">
+    <mat-grid-tile-header>
+      VELOCITY
+    </mat-grid-tile-header>
+    <div appFontFitSize [maxSize]="injected ? 24 : 60">
+      {{airplane.groundSpeed}}
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-grid-tile-header>
+      HEADING
+    </mat-grid-tile-header>
+    <div appFontFitSize maxSize="24">
+    {{airplane.heading}}°
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-grid-tile-header>
+      ALTITUDE
+    </mat-grid-tile-header>
+    <div appFontFitSize maxSize="24">
+    {{airplane.altitude}}
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile *ngIf="injected">
+    <mat-grid-tile-header>
+      DISTANCE
+    </mat-grid-tile-header>
+    <div appFontFitSize maxSize="24">
+    {{airplane.proximity.distance}}
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+</div>

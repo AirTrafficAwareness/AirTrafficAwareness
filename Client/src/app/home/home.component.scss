@@ -1,0 +1,109 @@
+
+.dark-background {
+  background: #332B2B;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.sidebar {
+  width: 250px;
+  flex-grow: 0;
+  background-color: #424242;
+  color: white;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  align-content: space-around;
+  justify-content: stretch;
+  padding: 20px;
+}
+
+.sidebar * {
+  flex-grow: 1;
+}
+
+svg {
+  flex-grow: 1;
+}
+
+text {
+  fill: #fff;
+  fill-opacity: 0.5;
+  alignment-baseline: middle;
+  text-anchor: middle;
+
+  font-family: "SF Mono", SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.north text {
+  fill-opacity: 1;
+}
+
+.compass-points {
+  stroke: #0088BF;
+  stroke-width: 4;
+  fill: #000;
+}
+
+$colors: (
+  "notice": #0088BF,
+  "caution": #FFD300,
+  "danger": #C40233,
+  "safe": #fff
+);
+
+%ring {
+  fill-opacity: 0.25;
+}
+
+%circle {
+  stroke-opacity: 1;
+  fill-opacity: 0;
+  stroke-width: 4;
+}
+
+@each $name, $color in $colors {
+  ##{$name} {
+    path {
+      @extend %ring;
+      fill: $color;
+    }
+
+    circle {
+      @extend %circle;
+      stroke: $color;
+      fill: #000;
+    }
+  }
+
+  .airplane.#{$name} {
+    path {
+      stroke-width: 2;
+      stroke-opacity: 0.75;
+      stroke: #000;
+      fill: #fff;
+      animation: $name 1666ms infinite;
+
+      @keyframes #{$name}
+      {
+        0% {
+          fill: #fff;
+        }
+        100% {
+          fill: $color;
+        }
+      }
+
+    }
+  }
+
+}
