@@ -1,5 +1,5 @@
 import {DataSourceProtocol} from "./dataSourceProtocol";
-import * as data1 from "./data/TestCase3.json";
+import data1 from "./data/TestCase3.json";
 import {ATAEngine} from "./engine";
 
 export class Simulation extends DataSourceProtocol {

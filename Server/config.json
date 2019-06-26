@@ -1,0 +1,8 @@
+{
+  "dataSource": "openSky",
+  "credentials": {
+    "username": "cjk8zb",
+    "password": "Vm4D6zZRj4jkPGJ"
+  },
+  "port": 3000
+}

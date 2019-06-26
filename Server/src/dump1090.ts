@@ -1,7 +1,9 @@
 import {DataSourceProtocol} from './dataSourceProtocol';
-import * as request from 'request'
+import request from 'request';
 import {Airplane} from "./airplane";
 import {ATAEngine} from "./engine";
+import config, {DataSource} from "./config";
+import assert from "assert";
 
 type Dump1090Data = {
     hex: string,
@@ -21,8 +23,18 @@ type Dump1090Data = {
 
 export class Dump1090 extends DataSourceProtocol {
 
-    loopInterval = 1000;
+    loopInterval = 40;
     started = false;
+    url: string;
+
+    constructor() {
+        super();
+        if (config.dataSource === DataSource.Dump1090 && config.url) {
+            this.url = config.url;
+        } else {
+            this.url = 'http://localhost:8080/data.json';
+        }
+    }
 
     start() {
         if (this.started) {
@@ -32,15 +44,14 @@ export class Dump1090 extends DataSourceProtocol {
     }
 
     loop() {
-        request('http://192.168.43.168:8080/data.json', {json: true}, (err, res, body) => {
-            console.log(body);
+        request(this.url, {json: true}, (err, res, body) => {
             this.onReceivedData(this.convert(body));
             setTimeout(() => this.loop(), this.loopInterval);
         });
     }
 
     public convert(dump1090Data: Dump1090Data[]) {
-
+        const now = Date.now();
         let airplaneList = [];
         if (!dump1090Data || !Array.isArray(dump1090Data)) {
             return [];
@@ -56,23 +67,13 @@ export class Dump1090 extends DataSourceProtocol {
                     latitude: val.lat,
                     longitude: val.lon,
                     heading: val.validtrack ? val.track : undefined,
-                    lastUpdateDate: Date.now()
+                    lastUpdateDate: now - val.seen
                 };
 
                 airplaneList.push(airplane);
             }
         });
 
-        if (ATAEngine.origin) {
-            let airplane: Airplane = {
-                identifier: 'Ground',
-                latitude: ATAEngine.origin.latitude,
-                longitude: ATAEngine.origin.longitude,
-                lastUpdateDate: Date.now(),
-                heading: 0
-            };
-            airplaneList.push(airplane);
-        }
         //var output = JSON.stringify(airplaneList);
         return airplaneList;
     }

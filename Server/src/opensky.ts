@@ -1,12 +1,8 @@
 import {DataSourceProtocol} from './dataSourceProtocol';
-import * as request from 'request'
+import request from 'request';
 import {Airplane, Coordinate} from "./airplane";
 import {ATAEngine} from "./engine";
-
-const OpenSkyCredentials = {
-    username: 'cjk8zb',
-    password: 'Vm4D6zZRj4jkPGJ'
-};
+import config, {DataSource} from './config';
 
 type OpenSkyData = {
     time: number,
@@ -34,6 +30,14 @@ type OpenSkyData = {
 export class OpenSky extends DataSourceProtocol {
 
     started = false;
+    credentials?: {username: string, password: string};
+
+    constructor() {
+        super();
+        if (config.dataSource === DataSource.OpenSky && config.credentials) {
+            this.credentials = config.credentials;
+        }
+    }
 
     static convert(openSkyData: OpenSkyData): Airplane[] {
         const airplanes: Airplane[] = [];
@@ -73,11 +77,12 @@ export class OpenSky extends DataSourceProtocol {
             auth: undefined
         };
 
-        if (OpenSkyCredentials.username) {
-            params.auth = OpenSkyCredentials;
+        if (this.credentials) {
+            params.auth = this.credentials;
         }
 
         request('https://opensky-network.org/api/states/all', params, (err, res, body) => {
+            console.log('res', res);
             let airplanes = OpenSky.convert(body);
             this.onReceivedData(airplanes);
             setTimeout(() => this.loop(interval), interval);
@@ -92,8 +97,8 @@ export class OpenSky extends DataSourceProtocol {
         if (ATAEngine.origin) {
             this.started = true;
             // OpenSky users can retrieve data with a time resolution of 5 seconds.
-            if (OpenSkyCredentials.username) {
-                this.loop(5000);
+            if (this.credentials) {
+                this.loop(6000);
             } else {
                 this.loop(10000);
             }

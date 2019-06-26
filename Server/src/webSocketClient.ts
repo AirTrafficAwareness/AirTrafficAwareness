@@ -1,13 +1,13 @@
-import * as WebSocket from 'ws';
+import WebSocket from 'ws';
 import {ClientProtocol} from "./clientProtocol";
 import {Airplane} from "./airplane";
-import * as http from "http";
+import http from "http";
 
 export class WebSocketClient extends ClientProtocol {
     private client: WebSocket;
 
     constructor(server: http.Server) {
-        super();
+        super(server);
         const wss = new WebSocket.Server({server});
         wss.on('connection', (ws: WebSocket) => {
             this.client = ws;
