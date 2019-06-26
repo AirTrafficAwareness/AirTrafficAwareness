@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, Inject, Input, OnInit, Optional} from '@angular/core';
 import {Airplane} from '../airplane';
-import {MAT_BOTTOM_SHEET_DATA} from '@angular/material';
+import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import {ATAService} from '../ata.service';
 
 @Component({

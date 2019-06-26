@@ -8,20 +8,18 @@ import {ListComponent} from './list/list.component';
 import {DetailsComponent} from './details/details.component';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {
-  MatBottomSheetModule,
-  MatButtonModule,
-  MatCardModule,
-  MatDialogModule,
-  MatFormFieldModule,
-  MatGridListModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatSidenavModule,
-  MatSnackBarModule,
-  MatToolbarModule
-} from '@angular/material';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import {FormsModule} from '@angular/forms';
 import {FontFitSizeDirective} from './font-fit-size.directive';
 

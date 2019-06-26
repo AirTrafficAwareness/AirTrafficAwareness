@@ -1,7 +1,8 @@
 import {Component, EventEmitter, OnInit, Optional, Output} from '@angular/core';
 import {Airplane, Coordinate} from '../airplane';
 import {ATAService} from '../ata.service';
-import {MatDialogRef, MatSnackBar} from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-list',

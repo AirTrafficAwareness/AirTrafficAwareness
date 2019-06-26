@@ -1,5 +1,5 @@
 import {Directive, ElementRef, Host, Optional, AfterViewChecked, AfterContentChecked, Input} from '@angular/core';
-import {MatGridTile, MatGridTileText} from '@angular/material';
+import { MatGridTile, MatGridTileText } from '@angular/material/grid-list';
 
 @Directive({
   selector: '[appFontFitSize]'

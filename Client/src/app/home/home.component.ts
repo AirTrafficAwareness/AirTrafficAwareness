@@ -2,7 +2,9 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@a
 import {ATAService} from '../ata.service';
 import {Airplane} from '../airplane';
 import {DetailsComponent} from '../details/details.component';
-import {MatBottomSheet, MatDialog, MatSidenav} from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-home',
