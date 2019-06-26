@@ -7,21 +7,23 @@ import {HomeComponent} from './home/home.component';
 import {ListComponent} from './list/list.component';
 import {DetailsComponent} from './details/details.component';
 import {HttpClientModule} from '@angular/common/http';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatBottomSheetModule,
   MatButtonModule,
   MatCardModule,
   MatDialogModule,
-  MatFormFieldModule, MatGridListModule,
+  MatFormFieldModule,
+  MatGridListModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
+  MatSidenavModule,
   MatSnackBarModule,
   MatToolbarModule
 } from '@angular/material';
 import {FormsModule} from '@angular/forms';
-import { FontFitSizeDirective } from './font-fit-size.directive';
+import {FontFitSizeDirective} from './font-fit-size.directive';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,7 @@ import { FontFitSizeDirective } from './font-fit-size.directive';
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
-    NoopAnimationsModule,
+    BrowserAnimationsModule,
     MatBottomSheetModule,
     MatButtonModule,
     MatCardModule,
@@ -46,6 +48,7 @@ import { FontFitSizeDirective } from './font-fit-size.directive';
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatSidenavModule,
     MatSnackBarModule,
     MatToolbarModule
   ],

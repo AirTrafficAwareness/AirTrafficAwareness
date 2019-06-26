@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ATAService} from '../ata.service';
 import {Airplane} from '../airplane';
 import {DetailsComponent} from '../details/details.component';
-import {MatBottomSheet, MatDialog} from '@angular/material';
-import {ListComponent} from '../list/list.component';
+import {MatBottomSheet, MatDialog, MatSidenav} from '@angular/material';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +10,8 @@ import {ListComponent} from '../list/list.component';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+  @ViewChild('list', { static: true }) list: MatSidenav;
+  @ViewChild('detailsComponent', { static: true }) detailsComponent: DetailsComponent;
 
   views: { [view: string]: AirplaneView } = {};
   container: SVGGElement;
@@ -20,6 +21,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   constructor(
     private dialog: MatDialog,
     private bottomSheet: MatBottomSheet,
+    private changeDetectorRef: ChangeDetectorRef,
     // private modalController: ModalController,
     // private popoverController: PopoverController,
     public ata: ATAService) {
@@ -32,24 +34,26 @@ export class HomeComponent implements OnInit, AfterViewInit {
     airplaneNode.remove();
     this.airplaneNode = airplaneNode;
 
-    this.ata.onUpdate.subscribe(airplanes => {
-      this.current = Boolean(this.ata.currentAirplane);
+    this.ata.airplanes.subscribe(airplanes => this.updateAirplanes(airplanes));
+  }
 
-      // Mark all existing views for deletion.
-      Object.values(this.views).forEach(view => view.touched = false);
+  private updateAirplanes(airplanes: Airplane[]) {
+    this.current = Boolean(this.ata.currentAirplane);
 
-      airplanes.forEach((airplane: Airplane) => {
-        this.updateAirplane(airplane);
-      });
+    // Mark all existing views for deletion.
+    Object.values(this.views).forEach(view => view.touched = false);
 
-      // Remove all view that were not updated.
-      Object.keys(this.views).forEach(k => {
-        const view = this.views[k];
-        if (!view.touched) {
-          view.svgElement.remove();
-          delete this.views[k];
-        }
-      });
+    airplanes.forEach((airplane: Airplane) => {
+      this.updateAirplane(airplane);
+    });
+
+    // Remove all view that were not updated.
+    Object.keys(this.views).forEach(k => {
+      const view = this.views[k];
+      if (!view.touched) {
+        view.svgElement.remove();
+        delete this.views[k];
+      }
     });
   }
 
@@ -59,11 +63,25 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
+  selectAirplane(airplane: Airplane) {
+    if (!this.ata.currentAirplane) {
+      this.ata.currentAirplane = airplane;
+      setTimeout(() => {
+        const airplanes = this.ata.airplanes.getValue();
+        console.log('selected!! airplanes', airplanes);
+        this.updateAirplanes(airplanes);
+      });
+    } else {
+      this.detailsComponent.airplane = airplane;
+    }
+    this.list.close();
+  }
+
   showList() {
-    const dialogRef = this.dialog.open(ListComponent);
-    dialogRef.afterClosed().subscribe(data => {
-      this.ata.currentAirplane = data;
-    });
+    // const dialogRef = this.dialog.open(ListComponent);
+    // dialogRef.afterClosed().subscribe(data => {
+    //
+    // });
     // const modal = await this.modalController.create({
     //   component: 'app-list',
     //   backdropDismiss: false
@@ -75,8 +93,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   async showDetails(event: Event, airplane): Promise<void> {
-    this.ata.currentAirplane = airplane;
-    this.current = false;
+    // this.ata.currentAirplane = airplane;
+    // this.current = false;
+    this.detailsComponent.airplane = airplane;
     // this.bottomSheet.open(DetailsComponent, {data: {airplane}});
     // const popover = await this.popoverController.create({
     //   component: DetailsComponent,
@@ -120,13 +139,20 @@ class AirplaneView {
 
   set airplane(airplane: Airplane) {
     const proximity = airplane.proximity;
-    this.svgElement.className.baseVal = `airplane ${proximity.flightZone}`;
-    this.svgElement.setAttribute('data-distance', `${proximity.distance}`);
-    this.svgElement.setAttribute('data-heading', `${airplane.heading}`);
+    this.svgElement.classList.forEach(className => {
+      this.svgElement.classList.remove(className);
+    });
+
+    this.svgElement.classList.add('airplane');
+    this.svgElement.classList.add(proximity.flightZone);
+
+    this.svgElement.dataset.distance = `${proximity.distance}`;
+    this.svgElement.dataset.heading = `${airplane.heading}`;
+
     const transform = [
       `translate(${proximity.position.x} ${proximity.position.y})`,
       `rotate(${airplane.heading} 0 0)`,
-      `scale(0.5)`
+      // `scale(0.5)`
     ];
     this.svgElement.setAttribute('transform', transform.join(' '));
   }

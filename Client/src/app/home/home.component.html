@@ -1,55 +1,84 @@
-<div class="dark-background">
-  <div class="sidebar" *ngIf="current">
-      <app-details></app-details>
-  </div>
-  <svg id="svg" viewBox="-24 -24 768 768">
+<mat-sidenav-container>
 
-    <g id="container">
-      <g id="notice">
-        <path d="M 360, 360
+  <mat-sidenav class="sidebar" mode="over" opened position="start" [disableClose]="!current" #list>
+    <app-list (select)="selectAirplane($event)"></app-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <div class="dark-background">
+    <div class="sidebar">
+      <div style="display: flex;justify-content: space-between">
+        <button mat-stroked-button id="toggleList" (click)="list.toggle()">
+          <mat-icon>menu</mat-icon>
+          List Airplanes
+        </button>
+        <button [hidden]="detailsComponent.isCurrent" mat-button (click)="showDetails($event, ata.currentAirplane)"><mat-icon>clear</mat-icon></button>
+      </div>
+      <app-details [airplane]="ata.currentAirplane" #detailsComponent></app-details>
+      <div id="legend">
+        <div class="item">
+          <div class="icon danger"></div>
+          <span>3 NM</span>
+        </div>
+        <div class="item">
+          <div class="icon caution"></div>
+          <span>6 NM</span>
+        </div>
+        <div class="item">
+          <div class="icon notice"></div>
+          <span>9 NM</span>
+        </div>
+      </div>
+    </div>
+    <svg id="svg" viewBox="-24 -24 768 768">
+
+      <g id="container">
+        <g id="notice">
+          <path d="M 360, 360
                          m 0, -360 a 360, 360, 0, 1, 0, 1, 0 Z
                          m 0, 120 a 240, 240, 0, 1, 1, -1, 0 Z"></path>
-        <circle r="360" cx="360" cy="360"></circle>
-      </g>
+          <circle r="360" cx="360" cy="360"></circle>
+        </g>
 
-      <g id="caution">
-        <path d="M 360, 360
+        <g id="caution">
+          <path d="M 360, 360
                          m 0, -240 a 240, 240, 0, 1, 0, 1, 0 Z
                          m 0, 120 a 120, 120, 0, 1, 1, -1, 0 Z"></path>
-        <circle cx="360" cy="360" r="240"></circle>
-      </g>
+          <circle cx="360" cy="360" r="240"></circle>
+        </g>
 
-      <g id="danger">
-        <path d="M 360, 360
+        <g id="danger">
+          <path d="M 360, 360
                          m 0, -120 a 120, 120, 0, 1, 0, 1, 0 Z"></path>
-        <circle r="120" cx="360" cy="360"></circle>
-      </g>
+          <circle r="120" cx="360" cy="360"></circle>
+        </g>
 
-      <circle r="2" cx="360" cy="360" fill="#fff" fill-opacity="1" stroke-width="0"></circle>
+        <circle r="2" cx="360" cy="360" fill="#fff" fill-opacity="1" stroke-width="0"></circle>
 
-      <g id="compass">
-        <g class="north" transform="translate(360 0)">
-          <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
-          <text x="0" y="0">N</text>
+        <g id="compass">
+          <g class="north" transform="translate(360 0)">
+            <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
+            <text x="0" y="0">N</text>
+          </g>
+          <g transform="translate(720 360) rotate(90)">
+            <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
+            <text x="0" y="0">E</text>
+          </g>
+          <g transform="translate(360 720) rotate(180)">
+            <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
+            <text x="0" y="0">S</text>
+          </g>
+          <g transform="translate(0 360) rotate(270)">
+            <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
+            <text x="0" y="0">W</text>
+          </g>
         </g>
-        <g transform="translate(720 360) rotate(90)">
-          <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
-          <text x="0" y="0">E</text>
-        </g>
-        <g transform="translate(360 720) rotate(180)">
-          <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
-          <text x="0" y="0">S</text>
-        </g>
-        <g transform="translate(0 360) rotate(270)">
-          <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
-          <text x="0" y="0">W</text>
-        </g>
-      </g>
 
-      <g id="airplane" class="airplane safe">
-        <path d="M0,22 L-8,24 L-8,20 L-2,16 L-3,6 L-24,12 L-24,6 L-4,-6 L-4,-12 C-4,-18 -2,-24 0,-24
+        <g id="airplane" class="airplane safe">
+          <path d="M0,22 L-8,24 L-8,20 L-2,16 L-3,6 L-24,12 L-24,6 L-4,-6 L-4,-12 C-4,-18 -2,-24 0,-24
                C2,-24 4,-18 4,-12 L4,-6 L24,6 L24,12 L3,6 L2,16 L8,20 L8,24 L0,22 Z"></path>
+        </g>
       </g>
-    </g>
-  </svg>
-</div>
+    </svg>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

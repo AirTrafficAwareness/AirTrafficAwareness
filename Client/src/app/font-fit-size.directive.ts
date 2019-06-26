@@ -1,10 +1,10 @@
-import {Directive, ElementRef, Host, Optional, AfterViewChecked, Input} from '@angular/core';
+import {Directive, ElementRef, Host, Optional, AfterViewChecked, AfterContentChecked, Input} from '@angular/core';
 import {MatGridTile, MatGridTileText} from '@angular/material';
 
 @Directive({
   selector: '[appFontFitSize]'
 })
-export class FontFitSizeDirective implements AfterViewChecked {
+export class FontFitSizeDirective implements AfterContentChecked {
   window: Window;
 
   @Input() minSize = 8;
@@ -13,7 +13,7 @@ export class FontFitSizeDirective implements AfterViewChecked {
   constructor(private el: ElementRef) {
   }
 
-  ngAfterViewChecked() {
+  ngAfterContentChecked() {
     // this.el.nativeElement.style.backgroundColor = 'yellow';
     // this.el.nativeElement.style.alignSelf = 'flex-end';
 
@@ -24,8 +24,6 @@ export class FontFitSizeDirective implements AfterViewChecked {
     if (!this.window) {
       this.window = parent.ownerDocument.defaultView;
     }
-
-    console.log('el', this.el, 'element', element, 'parent', parent, 'header', header, 'this.window', this.window);
 
     const fontSize = parseFloat(this.style(element).fontSize);
     const elementWidth = parseFloat(this.style(element).width);

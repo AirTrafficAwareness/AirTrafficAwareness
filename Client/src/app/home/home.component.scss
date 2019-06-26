@@ -1,15 +1,17 @@
+mat-sidenav-container {
+  width: 100vw;
+  height: 100vh;
+}
 
 .dark-background {
   background: #332B2B;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   margin: 0;
   padding: 0;
   display: flex;
   align-items: stretch;
+  justify-content: stretch;
+  width: 100vw;
+  height: 100vh;
 }
 
 .sidebar {
@@ -18,19 +20,27 @@
   background-color: #424242;
   color: white;
   box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  align-content: space-around;
-  justify-content: stretch;
-  padding: 20px;
+  //display: flex;
+  align-items: stretch;
+  align-content: space-between;
+  justify-content: space-between;
+  padding: 16px;
+  flex-direction: column;
 }
 
 .sidebar * {
-  flex-grow: 1;
+  //flex-grow: 1;
 }
 
 svg {
   flex-grow: 1;
+}
+
+#toggleList {
+  align-self: flex-start;
+  //position: absolute;
+  //top: 8px;
+  //left: 8px;
 }
 
 text {
@@ -57,7 +67,7 @@ text {
 $colors: (
   "notice": #0088BF,
   "caution": #FFD300,
-  "danger": #C40233,
+  "danger": rgb(196, 2, 51),
   "safe": #fff
 );
 
@@ -106,4 +116,30 @@ $colors: (
     }
   }
 
+}
+
+#legend {
+  display: flex;
+  justify-content: space-between;
+
+  .item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    .icon {
+      width: 12px;
+      height: 12px;
+      border-radius: 8px;
+      border: 2px solid black;
+      @each $name, $color in $colors {
+        &.#{$name} {
+          border-color: $color;
+          background-color: rgba($color, 0.25);
+        }
+      }
+    }
+    span {
+      padding-left: 4px;
+    }
+  }
 }

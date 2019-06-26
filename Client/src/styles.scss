@@ -10,10 +10,10 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $ata-app-primary: mat-palette($mat-light-blue);
-$ata-app-accent:  mat-palette($mat-brown);
+$ata-app-accent: mat-palette($mat-brown);
 
 // The warn palette is optional (defaults to red).
-$ata-app-warn:    mat-palette($mat-red);
+$ata-app-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $ata-app-theme: mat-dark-theme($ata-app-primary, $ata-app-accent, $ata-app-warn);
@@ -23,6 +23,18 @@ $ata-app-theme: mat-dark-theme($ata-app-primary, $ata-app-accent, $ata-app-warn)
 // that you are using.
 @include angular-material-theme($ata-app-theme);
 
-html, body { height: 100%; padding: 0}
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; padding: 0}
+html, body {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  user-select: none;
+}
 
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  padding: 0
+}
+
+[hidden] { display: none !important;}

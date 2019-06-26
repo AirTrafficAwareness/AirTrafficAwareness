@@ -5,7 +5,8 @@
       <mat-form-field>
         <mat-label>Server Address</mat-label>
         <input matInput type="url" [placeholder]="defaultServer" [(ngModel)]="serverAddress">
-        <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <button mat-button *ngIf="serverAddress" matSuffix mat-icon-button aria-label="Clear"
+                (click)="serverAddress=''">
           <mat-icon>close</mat-icon>
         </button>
       </mat-form-field>
@@ -16,11 +17,17 @@
   </mat-card-content>
 </mat-card>
 
-
-<mat-list *ngIf="connected">
-  <h3 mat-subheader>Select your Airplane</h3>
-  <mat-list-item *ngIf="!airplanes">Searching for Airplanes&hellip;</mat-list-item>
-  <mat-list-item *ngFor="let item of airplanes" (click)="itemSelected(item)">
-    {{ item.identifier }} - {{ item.proximity.distance }} - {{ item.heading }}
-  </mat-list-item>
-</mat-list>
+<ng-container *ngIf="connected">
+  <h2>{{airplanes ? 'Select your Airplane' : 'Searching for Airplanes&hellip;'}}</h2>
+  <div>
+    <mat-list>
+      <mat-list-item *ngFor="let item of airplanes" (click)="itemSelected(item)">
+        <h4 mat-line>
+          {{(item.flightNumber || "Unknown").trim() | uppercase}}
+          ({{item.identifier | uppercase}})
+        </h4>
+        <p mat-line> {{item.proximity.distance | number: '1.1-1'}} NM - {{ item.heading | number:'1.0-0' }}&deg;</p>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</ng-container>

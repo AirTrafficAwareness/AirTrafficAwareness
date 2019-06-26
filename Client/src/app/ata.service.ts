@@ -1,6 +1,7 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {Airplane, Coordinate} from './airplane';
 import {HttpClient} from '@angular/common/http';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 const httpProtocol = `${location.protocol}`; // http: | https:
 const wsProtocol = httpProtocol.replace(/^http/, 'ws'); // ws: | wss:
@@ -9,32 +10,27 @@ const wsProtocol = httpProtocol.replace(/^http/, 'ws'); // ws: | wss:
   providedIn: 'root'
 })
 export class ATAService {
-
-  public onUpdate: EventEmitter<Airplane[]> = new EventEmitter();
+  public airplanes: BehaviorSubject<Airplane[]> = new BehaviorSubject([]);
   private webSocket;
-  private pCurrentAirplane: Airplane;
+  private airplane: Airplane;
 
   get currentAirplane() {
-    return this.pCurrentAirplane;
+    return this.airplane;
   }
 
   set currentAirplane(airplane: Airplane) {
     this.webSocket.send(JSON.stringify(airplane));
-    this.pCurrentAirplane = airplane;
+    this.airplane = airplane;
   }
 
-  constructor(public http: HttpClient) {
-    console.log('Hello AirplaneProvider Provider');
-  }
+  constructor(public http: HttpClient) {}
 
   connect(address: string, coordinate: Coordinate) {
-    console.log('coordinate ?', coordinate);
     const qs = coordinate ? {
       latitude: coordinate.latitude.toFixed(8),
       longitude: coordinate.longitude.toFixed(8)
     } : {};
 
-    console.log('params?', qs);
     return this.http.get<any>(`${httpProtocol}//${address}/api/`, {params: qs}).pipe(res => {
       const url = `${wsProtocol}//${address}`;
       const ws = new WebSocket(url);
@@ -42,7 +38,7 @@ export class ATAService {
         const json = JSON.parse(message.data);
         console.log('json', json);
         if (Array.isArray(json)) {
-          this.onUpdate.emit(json);
+          this.airplanes.next(json);
         }
       };
       this.webSocket = ws;

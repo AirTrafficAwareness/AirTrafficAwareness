@@ -10,46 +10,34 @@ import {ATAService} from '../ata.service';
 })
 export class DetailsComponent implements OnInit {
 
-  private pAirplane: Airplane;
-  set airplane(airplane: Airplane) {
-    this.pAirplane = airplane;
-    this.changeDetectorRef.markForCheck();
-  }
-
-  get airplane() {
-    return this.pAirplane;
-  }
-
+  @Input() airplane: Airplane;
   private injected = false;
+
   constructor(
     private ata: ATAService,
     private changeDetectorRef: ChangeDetectorRef,
-    @Optional() @Inject(MAT_BOTTOM_SHEET_DATA) public data: { airplane: Airplane }) {
+    @Optional() @Inject(MAT_BOTTOM_SHEET_DATA) public data: { airplane: Airplane }
+  ) {
     if (data) {
       this.injected = true;
-      console.log('airplane details', data.airplane);
-      this.pAirplane = data.airplane;
+      this.airplane = data.airplane;
     }
   }
 
-  ngOnInit() {
-    this.ata.onUpdate.subscribe(airplanes => {
-      if (!this.injected) {
-        this.airplane = this.ata.currentAirplane;
-      }
+  get isCurrent(): boolean {
+    return this.airplane && this.ata.currentAirplane && this.airplane.identifier === this.ata.currentAirplane.identifier;
+  }
 
-      airplanes.forEach((airplane: Airplane) => {
-        this.updateAirplane(airplane);
+  ngOnInit() {
+    this.ata.airplanes.subscribe(airplanes => {
+      if (!this.airplane) {
+        return;
+      }
+      airplanes.filter(airplane => this.airplane.identifier === airplane.identifier).forEach((airplane: Airplane) => {
+        this.airplane = airplane;
+        this.changeDetectorRef.markForCheck();
       });
     });
   }
 
-  private updateAirplane(airplane: Airplane) {
-    if (this.pAirplane.identifier !== airplane.identifier) {
-      return;
-    }
-
-    console.log('updated details', airplane);
-    this.airplane = airplane;
-  }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Optional, Output} from '@angular/core';
 import {Airplane, Coordinate} from '../airplane';
 import {ATAService} from '../ata.service';
 import {MatDialogRef, MatSnackBar} from '@angular/material';
@@ -15,19 +15,19 @@ export class ListComponent implements OnInit {
   public airplanes: Airplane[];
   public connected = false;
 
+  @Output() select = new EventEmitter<Airplane>();
+
   constructor(
-    public dialogRef: MatDialogRef<ListComponent>,
+    @Optional() public dialogRef: MatDialogRef<ListComponent>,
     private snackBar: MatSnackBar,
     private ata: ATAService) {
-    this.ata.onUpdate.subscribe(airplanes => {
+    this.ata.airplanes.subscribe(airplanes => {
       airplanes.sort((a, b) => a.proximity.distance - b.proximity.distance);
       this.airplanes = airplanes;
     });
   }
 
   public connect(event: MouseEvent) {
-    console.log(event);
-    console.log(this.serverAddress);
     const address = this.serverAddress || this.defaultServer;
     this.getLocation()
       .catch(e => {
@@ -40,7 +40,11 @@ export class ListComponent implements OnInit {
   }
 
   itemSelected(item: Airplane) {
-    this.dialogRef.close(item);
+    if (this.dialogRef) {
+      this.dialogRef.close(item);
+    } else {
+      this.select.next(item);
+    }
   }
 
   async getLocation(): Promise<Coordinate> {
