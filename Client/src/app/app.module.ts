@@ -1,39 +1,56 @@
-import { NgModule, ErrorHandler } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { HomePage } from '../pages/home/home';
-import { ListPage } from "../pages/list/list";
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { HttpClientModule } from "@angular/common/http";
-import { AirTrafficAwarenessClient } from '../providers/air-traffic-awareness-client';
-import {Geolocation} from '@ionic-native/geolocation';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {HomeComponent} from './home/home.component';
+import {ListComponent} from './list/list.component';
+import {DetailsComponent} from './details/details.component';
+import {HttpClientModule} from '@angular/common/http';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import {FormsModule} from '@angular/forms';
+import {FontFitSizeDirective} from './font-fit-size.directive';
 
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage,
-    ListPage
+    AppComponent,
+    HomeComponent,
+    ListComponent,
+    DetailsComponent,
+    FontFitSizeDirective
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(MyApp)
+    AppRoutingModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    MatBottomSheetModule,
+    MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatSidenavModule,
+    MatSnackBarModule,
+    MatToolbarModule
   ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    HomePage,
-    ListPage
-  ],
-  providers: [
-    Geolocation,
-    StatusBar,
-    SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AirTrafficAwarenessClient
-  ]
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

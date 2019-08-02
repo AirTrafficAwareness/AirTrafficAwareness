@@ -1,5 +1,5 @@
 import { ATAEngine } from "../src/engine";
-import * as assert from 'assert';
+import assert from 'assert';
 
 describe('ATAEngine', () => {
     context('when calculating distance', () => {
@@ -33,7 +33,7 @@ describe('ATAEngine', () => {
                 }
             ]);
         });
-    
+
         it('should calculate the distance between airplanes that have the same distance', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
@@ -63,7 +63,7 @@ describe('ATAEngine', () => {
                 }
             ]);
         });
-    
+
         it('should calculate the distance between airplanes that are very close with same lon, different lat', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
@@ -94,7 +94,7 @@ describe('ATAEngine', () => {
                 }
             ]);
         });
-    
+
         it('should calculate the distance between airplanes that are very close with same lat, different lat', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
@@ -125,7 +125,7 @@ describe('ATAEngine', () => {
                 }
             ]);
         });
-    
+
         it('should calculate the distance between airplanes that are so close the distance is the 0, while lon is lesser', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
@@ -155,7 +155,7 @@ describe('ATAEngine', () => {
                 }
             ]);
         });
-    
+
         it('should calculate the distance between airplanes that are so close the distance is the 0, while lon is greater', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
@@ -185,7 +185,7 @@ describe('ATAEngine', () => {
                 }
             ]);
         });
-    
+
         it('should calculate the distance between airplanes with inexistant latitudes', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
@@ -215,7 +215,7 @@ describe('ATAEngine', () => {
                 }
             ]);
         });
-    
+
         it('should calculate the distance between airplanes with inexistant longitudes', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
@@ -246,7 +246,7 @@ describe('ATAEngine', () => {
             ]);
         });
     });
-    
+
     context('when calculating flight zone', () => {
         it('should return safe when longitudes are inexistant', () => {
             const engine = new ATAEngine();

@@ -7,6 +7,7 @@ export class ATAEngine {
     public onGeneratedDistances: CallbackFunction = (() => {});
     static origin: Airplane;
     flightZones: FlightZones;
+    airplaneMap = new Map<string, Airplane>();
 
     determineProximity(airplanes: Airplane[]) {
         if (!ATAEngine.origin) {
@@ -25,9 +26,14 @@ export class ATAEngine {
             this.updateZones();
         }
 
+        // const toRemove = new Set(this.airplaneMap.keys());
+
         airplanes.forEach(airplane => {
-            const distance = this.calculateDistance(airplane);
-            const flightZone = this.calculateFlightZone(distance);
+            // toRemove.delete(airplane.identifier);
+            // if
+            const distanceInMeters = this.calculateDistance(airplane);
+            const distance = toNauticalMiles(distanceInMeters);
+            const flightZone = this.calculateFlightZone(distanceInMeters);
             const position = this.calculatePosition(airplane);
 
             airplane.proximity = {distance, flightZone, position};
@@ -38,7 +44,7 @@ export class ATAEngine {
 
     updateZones() {
         // TODO: Calculate zones based on velocity, or use proper heuristic values.
-        const radius = 9260; // 5 nautical miles
+        const radius = toMeters(3); // Minimum horizontal separation is 3 nautical miles.
         this.flightZones = {
             danger: radius,
             caution: radius * 2,
@@ -84,7 +90,7 @@ export class ATAEngine {
         const scale = userInterfaceRadius / radius;
         const lat = toRadians(from.latitude);
 
-        const {PI, cos, sin, acos} = Math;
+        const {cos} = Math;
 
         // TODO: Replace magic numbers.
         const longitudeScale = (111415.13 * cos(lat)) - (94.55 * cos(3 * lat)) + (0.12 * cos(5 * lat));
@@ -102,4 +108,12 @@ export class ATAEngine {
 
 function toRadians(degrees: number): number {
     return degrees * Math.PI / 180;
+}
+
+function toNauticalMiles(meters: number): number {
+    return meters / 1852;
+}
+
+function toMeters(nauticalMiles: number): number {
+    return nauticalMiles * 1852;
 }

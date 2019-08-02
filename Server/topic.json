@@ -1,0 +1,12 @@
+[
+  {
+    "text": "#Hello",
+    "value": 10,
+    "sentiment": 0.95
+  },
+  {
+    "text": "#GoodBye",
+    "value": 10,
+    "sentiment": -0.72
+  }
+]

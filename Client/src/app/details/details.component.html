@@ -1,0 +1,47 @@
+<div *ngIf="airplane">
+  <div class="details">
+    <h2 class="mat-title identifier">{{airplane.flightNumber.trim() | uppercase}}
+      ({{airplane.identifier.trim() | uppercase}})</h2>
+    <span class="mat-subheading-2">{{airplane.latitude | number:'1.3-3'}}
+      , {{airplane.longitude | number:'1.3-3'}}</span>
+  </div>
+  <mat-grid-list cols="2" [rowHeight]="isCurrent ? '150px' : '150px'">
+    <mat-grid-tile [colspan]="isCurrent ? 2 : 1">
+      <mat-grid-tile-header>
+        VELOCITY
+      </mat-grid-tile-header>
+      <div appFontFitSize [maxSize]="isCurrent ? 60 : 24">
+        {{airplane.groundSpeed | number:'1.0-0'}} kt
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile *ngIf="!isCurrent">
+      <mat-grid-tile-header>
+        DISTANCE
+      </mat-grid-tile-header>
+      <div appFontFitSize maxSize="24">
+        {{airplane.proximity.distance | number:'1.2-2'}} NM
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-grid-tile-header>
+        HEADING
+      </mat-grid-tile-header>
+      <div appFontFitSize maxSize="24">
+        {{airplane.heading | number:'1.0-0'}}°
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-grid-tile-header>
+        ALTITUDE
+      </mat-grid-tile-header>
+      <div appFontFitSize maxSize="24">
+        <ng-container *ngIf="airplane.altitude">
+          {{airplane.altitude | number:'1.0-0'}}&prime;
+        </ng-container>
+        <ng-container *ngIf="!airplane.altitude">
+          N/A
+        </ng-container>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

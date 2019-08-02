@@ -1,0 +1,67 @@
+{
+  "now": 1536641434.9,
+  "messages": 683,
+  "aircraft": [
+    {
+      "hex": "a3c68c",
+      "version": 2,
+      "sil_type": "perhour",
+      "mlat": [
+      ],
+      "tisb": [
+      ],
+      "messages": 34,
+      "seen": 91.7,
+      "rssi": -25.0
+    },
+    {
+      "hex": "abd30f",
+      "flight": "FDX160  ",
+      "alt_baro": 37000,
+      "alt_geom": 38550,
+      "gs": 489.6,
+      "track": 137.0,
+      "baro_rate": 0,
+      "squawk": "7416",
+      "emergency": "none",
+      "category": "A5",
+      "nav_qnh": 1012.8,
+      "nav_altitude": 36992,
+      "nav_heading": 135.7,
+      "lat": 38.719208,
+      "lon": -94.498364,
+      "nic": 8,
+      "rc": 186,
+      "seen_pos": 0.2,
+      "version": 2,
+      "nic_baro": 1,
+      "nac_p": 9,
+      "nac_v": 1,
+      "sil": 3,
+      "sil_type": "perhour",
+      "gva": 2,
+      "sda": 2,
+      "mlat": [
+      ],
+      "tisb": [
+      ],
+      "messages": 159,
+      "seen": 0.1,
+      "rssi": -20.1
+    },
+    {
+      "hex": "a3f1c2",
+      "category": "A5",
+      "version": 2,
+      "sil_type": "perhour",
+      "mlat": [
+      ],
+      "tisb": [
+      ],
+      "messages": 467,
+      "seen": 101.1,
+      "rssi": -19.0
+    }
+  ]
+}
+

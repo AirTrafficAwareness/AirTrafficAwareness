@@ -1,7 +1,8 @@
 import {DataSourceProtocol} from './dataSourceProtocol';
-import * as request from 'request'
+import request from 'request';
 import {Airplane, Coordinate} from "./airplane";
 import {ATAEngine} from "./engine";
+import config, {DataSource} from './config';
 
 type OpenSkyData = {
     time: number,
@@ -27,6 +28,16 @@ type OpenSkyData = {
 }
 
 export class OpenSky extends DataSourceProtocol {
+
+    started = false;
+    credentials?: {username: string, password: string};
+
+    constructor() {
+        super();
+        if (config.dataSource === DataSource.OpenSky && config.credentials) {
+            this.credentials = config.credentials;
+        }
+    }
 
     static convert(openSkyData: OpenSkyData): Airplane[] {
         const airplanes: Airplane[] = [];
@@ -54,32 +65,43 @@ export class OpenSky extends DataSourceProtocol {
         return airplanes;
     }
 
-    loop(qs, interval) {
-        request('https://opensky-network.org/api/states/all', {qs, json: true}, (err, res, body) => {
+    loop(interval) {
+        const {
+            min: {latitude: lamin, longitude: lomin},
+            max: {latitude: lamax, longitude: lomax}
+        } = calculateBoundingBox(ATAEngine.origin, 100000);
+
+        const params = {
+            qs: {lamin, lomin, lamax, lomax},
+            json: true,
+            auth: undefined
+        };
+
+        if (this.credentials) {
+            params.auth = this.credentials;
+        }
+
+        request('https://opensky-network.org/api/states/all', params, (err, res, body) => {
+            console.log('res', res);
             let airplanes = OpenSky.convert(body);
-            airplanes.push({
-                identifier: 'Home',
-                latitude: ATAEngine.origin.latitude,
-                longitude: ATAEngine.origin.longitude,
-                lastUpdateDate: Date.now(),
-                heading: 0,
-                groundSpeed: 0
-            });
             this.onReceivedData(airplanes);
-            setTimeout(() => this.loop(qs, interval), interval);
+            setTimeout(() => this.loop(interval), interval);
         });
     }
 
     start() {
+        if (this.started) {
+            return;
+        }
 
         if (ATAEngine.origin) {
-            const {
-                min: {latitude: lamin, longitude: lomin},
-                max: {latitude: lamax, longitude: lomax}
-            } = calculateBoundingBox(ATAEngine.origin, 50000);
-
-            const qs = {lamin, lomin, lamax, lomax};
-            this.loop(qs, 10000);
+            this.started = true;
+            // OpenSky users can retrieve data with a time resolution of 5 seconds.
+            if (this.credentials) {
+                this.loop(6000);
+            } else {
+                this.loop(10000);
+            }
         }
     }
 
@@ -88,6 +110,7 @@ export class OpenSky extends DataSourceProtocol {
 const meanEarthRadius = 6371e3; // meters
 const {PI, cos, sin, acos, asin, abs} = Math;
 type BoundingBox = { min: Coordinate, max: Coordinate };
+
 export function calculateBoundingBox(center: Coordinate, length: number): BoundingBox {
     const lat = toRadians(center.latitude);
     const lon = toRadians(center.longitude);
