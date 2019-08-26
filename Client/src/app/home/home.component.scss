@@ -26,6 +26,7 @@ mat-sidenav-container {
   justify-content: space-between;
   padding: 16px;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .sidebar * {
@@ -34,6 +35,21 @@ mat-sidenav-container {
 
 svg {
   flex-grow: 1;
+}
+
+@supports(padding: max(0px)) {
+  .sidebar {
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  svg {
+    padding-top: env(safe-area-inset-top);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+
+  }
 }
 
 #toggleList {
