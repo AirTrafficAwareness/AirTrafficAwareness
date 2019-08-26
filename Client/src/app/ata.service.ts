@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ATAEngine} from './engine';
 
-const httpProtocol = `${location.protocol}`; // http: | https:
+const httpProtocol = location.protocol && location.protocol.startsWith('http') ? `${location.protocol}` : 'http:'; // http: | https:
 const wsProtocol = httpProtocol.replace(/^http/, 'ws'); // ws: | wss:
 
 @Injectable({

@@ -1,0 +1,7 @@
+{
+  "appId": "com.airtrafficawareness.ATAClient",
+  "appName": "ATA Client",
+  "bundledWebRuntime": true,
+  "npmClient": "npm",
+  "webDir": "dist/Client"
+}

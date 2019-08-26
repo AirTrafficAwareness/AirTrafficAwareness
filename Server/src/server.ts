@@ -1,6 +1,7 @@
 import app from "./app";
 import open from 'open';
 import config from "./config";
+const mdns = require('mdns');
 
 app.listen(config.port, address => {
     if (config.launchOptions) {
@@ -13,4 +14,7 @@ app.listen(config.port, address => {
     } else {
         console.log('Listening on port', config.port);
     }
+
+    const ad = mdns.createAdvertisement(mdns.tcp('ata-server'), config.port, {name: 'Air Traffic Awareness'});
+    ad.start();
 });
