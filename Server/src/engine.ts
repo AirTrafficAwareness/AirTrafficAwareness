@@ -1,13 +1,15 @@
-import {Airplane, Coordinate} from './airplane';
+import {Airplane, Coordinate, Point} from './airplane';
 
 type CallbackFunction = (airplanes: Airplane[]) => void;
-type FlightZones = { danger: number, caution: number, notice: number };
+interface FlightZones {
+    danger: number;
+    caution: number;
+    notice: number;
+}
 
 export class ATAEngine {
     public onGeneratedDistances: CallbackFunction = (() => {});
     static origin: Airplane;
-    flightZones: FlightZones;
-    airplaneMap = new Map<string, Airplane>();
 
     determineProximity(airplanes: Airplane[]) {
         if (!ATAEngine.origin) {
@@ -18,92 +20,70 @@ export class ATAEngine {
             const updated = airplanes.find(airplane => airplane.identifier === ATAEngine.origin.identifier);
             if (updated) {
                 ATAEngine.origin = updated;
-                this.updateZones();
             }
         }
 
-        if (!this.flightZones) {
-            this.updateZones();
-        }
-
-        // const toRemove = new Set(this.airplaneMap.keys());
-
-        airplanes.forEach(airplane => {
-            // toRemove.delete(airplane.identifier);
-            // if
-            const distanceInMeters = this.calculateDistance(airplane);
-            const distance = toNauticalMiles(distanceInMeters);
-            const flightZone = this.calculateFlightZone(distanceInMeters);
-            const position = this.calculatePosition(airplane);
-
-            airplane.proximity = {distance, flightZone, position};
-        });
-
-        this.onGeneratedDistances(airplanes);
-    }
-
-    updateZones() {
-        // TODO: Calculate zones based on velocity, or use proper heuristic values.
         const radius = toMeters(3); // Minimum horizontal separation is 3 nautical miles.
-        this.flightZones = {
+        const flightZones = {
             danger: radius,
             caution: radius * 2,
             notice: radius * 3,
         };
+
+        airplanes.forEach(airplane => {
+            const distanceInMeters = calculateDistance(airplane, ATAEngine.origin);
+            Object.assign(airplane, {
+                proximity: {
+                    distance: toNauticalMiles(distanceInMeters),
+                    flightZone: calculateFlightZone(distanceInMeters, flightZones),
+                    position: coordinateToPoint(airplane, ATAEngine.origin, flightZones.notice)
+                }
+            });
+        });
+
+        this.onGeneratedDistances(airplanes);
+    }
+}
+
+function calculateDistance(coordinate: Coordinate, origin: Coordinate): number {
+    const meanEarthRadius = 6371e3; // meters
+
+    const latTo = toRadians(coordinate.latitude);
+    const latFrom = toRadians(origin.latitude);
+    const lonD = toRadians(coordinate.longitude - origin.longitude);
+
+    const {acos, cos, sin} = Math;
+    return acos(sin(latFrom) * sin(latTo) + cos(latFrom) * cos(latTo) * cos(lonD)) * meanEarthRadius;
+}
+
+function calculateFlightZone(distance: number, flightZones: FlightZones): string {
+    const {danger, caution, notice} = flightZones;
+    if (distance <= danger) {
+        return 'danger';
     }
 
-    calculateDistance(airplane) {
-        const meanEarthRadius = 6371e3; // meters
-        const from = ATAEngine.origin;
-        const to = airplane;
-
-        const latTo = toRadians(to.latitude);
-        const latFrom = toRadians(from.latitude);
-        const lonD = toRadians(to.longitude - from.longitude);
-
-        const {acos, cos, sin} = Math;
-        return acos(sin(latFrom) * sin(latTo) + cos(latFrom) * cos(latTo) * cos(lonD)) * meanEarthRadius;
+    if (distance <= caution) {
+        return 'caution';
     }
 
-    calculateFlightZone(distance) {
-        const {danger, caution, notice} = this.flightZones;
-        if (distance <= danger) {
-            return 'danger';
-        }
-
-        if (distance <= caution) {
-            return 'caution';
-        }
-
-        if (distance <= notice) {
-            return 'notice';
-        }
-
-        return 'safe';
+    if (distance <= notice) {
+        return 'notice';
     }
 
-    calculatePosition(airplane) {
-        const userInterfaceRadius = 360; // points
-        const from = ATAEngine.origin;
-        const to = airplane;
-        const radius = this.flightZones.notice;
-        const scale = userInterfaceRadius / radius;
-        const lat = toRadians(from.latitude);
+    return 'safe';
+}
 
-        const {cos} = Math;
+function coordinateToPoint(coordinate: Coordinate, origin: Coordinate, radius: number): Point {
+    const userInterfaceRadius = 360; // points
+    const scale = userInterfaceRadius / radius;
 
-        // TODO: Replace magic numbers.
-        const longitudeScale = (111415.13 * cos(lat)) - (94.55 * cos(3 * lat)) + (0.12 * cos(5 * lat));
-        const latitudeScale = (111132.09 - (566.05 * cos(2 * lat)) + (1.20 * cos(4 * lat)) - (0.002 * cos(6 * lat)));
+    const xDistance = (coordinate.longitude - origin.longitude) * metersPerLongitudeAtLatitude(origin.latitude);
+    const yDistance = (coordinate.latitude - origin.latitude) * metersPerLatitudeAtLatitude(origin.latitude);
 
-        const xDistance = (to.longitude - from.longitude) * longitudeScale;
-        const yDistance = (to.latitude - from.latitude) * latitudeScale;
+    const x = userInterfaceRadius + xDistance * scale;
+    const y = userInterfaceRadius - yDistance * scale;
 
-        const x = userInterfaceRadius + xDistance * scale;
-        const y = userInterfaceRadius - yDistance * scale;
-
-        return {x, y};
-    }
+    return {x, y};
 }
 
 function toRadians(degrees: number): number {
@@ -116,4 +96,20 @@ function toNauticalMiles(meters: number): number {
 
 function toMeters(nauticalMiles: number): number {
     return nauticalMiles * 1852;
+}
+
+function metersPerLongitudeAtLatitude(latitude) {
+    const radians = toRadians(latitude);
+    const {cos} = Math;
+    return 111415.13 * cos(radians)
+        - 94.55 * cos(3.0 * radians)
+        + 0.12 * cos(5.0 * radians);
+}
+
+function metersPerLatitudeAtLatitude(latitude) {
+    const radians = toRadians(latitude);
+    const {cos} = Math;
+    return 111132.09 - 566.05 * cos(2.0 * radians)
+        + 1.2 * cos(4.0 * radians)
+        - 0.002 * cos(6.0 * radians);
 }
