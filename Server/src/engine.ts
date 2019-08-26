@@ -99,8 +99,8 @@ export class ATAEngine {
         const xDistance = (to.longitude - from.longitude) * longitudeScale;
         const yDistance = (to.latitude - from.latitude) * latitudeScale;
 
-        const x = xDistance * scale + userInterfaceRadius;
-        const y = yDistance * scale + userInterfaceRadius;
+        const x = userInterfaceRadius + xDistance * scale;
+        const y = userInterfaceRadius - yDistance * scale;
 
         return {x, y};
     }
