@@ -38,3 +38,9 @@ body {
 }
 
 [hidden] { display: none !important;}
+
+$roboto-font-path: "~roboto-fontface/fonts" !default;
+@import "~roboto-fontface/css/roboto/sass/roboto-fontface";
+
+$material-icons-font-path: '~material-icons/iconfont/';
+@import '~material-design-icons/iconfont/material-icons.css';
