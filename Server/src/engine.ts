@@ -32,6 +32,9 @@ export class ATAEngine {
 
         airplanes.forEach(airplane => {
             const distanceInMeters = calculateDistance(airplane, ATAEngine.origin);
+            if (Math.abs(airplane.latitude) > 90 || Math.abs(airplane.longitude) > 180 ) {
+                return;
+            }
             Object.assign(airplane, {
                 proximity: {
                     distance: toNauticalMiles(distanceInMeters),
