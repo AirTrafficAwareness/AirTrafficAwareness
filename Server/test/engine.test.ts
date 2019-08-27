@@ -15,8 +15,8 @@ describe('ATAEngine', () => {
                 assert.strictEqual(airplanes.length, 2);
                 const lax = airplanes[1];
                 assert.strictEqual(lax.identifier, 'LAX');
-                assert(lax.proximity.distance >= 2886444.44283798329974715782394574671655);
-                assert(lax.proximity.distance <= 2887259.95060711033944886005029688505340);
+                assert(lax.proximity.distance >= 1558.5553147073344);
+                assert(lax.proximity.distance <= 1558.9956536755456);
             };
             engine.determineProximity([
                 {
@@ -186,7 +186,7 @@ describe('ATAEngine', () => {
             ]);
         });
 
-        it('should calculate the distance between airplanes with inexistant latitudes', () => {
+        it('should only calculate the distance between airplanes with valid latitudes', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
                 identifier: 'BNA',
@@ -197,8 +197,7 @@ describe('ATAEngine', () => {
             engine.onGeneratedDistances = airplanes => {
                 assert.strictEqual(airplanes.length, 2);
                 const lax = airplanes[1];
-                assert.strictEqual(lax.identifier, 'LAX');
-                assert(lax.proximity.distance > 9999999);
+                assert.strictEqual(lax.proximity, undefined);
             };
             engine.determineProximity([
                 {
@@ -216,7 +215,7 @@ describe('ATAEngine', () => {
             ]);
         });
 
-        it('should calculate the distance between airplanes with inexistant longitudes', () => {
+        it('should only calculate the distance between airplanes with valid longitudes', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
                 identifier: 'BNA',
@@ -227,8 +226,7 @@ describe('ATAEngine', () => {
             engine.onGeneratedDistances = airplanes => {
                 assert.strictEqual(airplanes.length, 2);
                 const lax = airplanes[1];
-                assert.strictEqual(lax.identifier, 'LAX');
-                assert(lax.proximity.distance > 9999999);
+                assert.strictEqual(lax.proximity, undefined);
             };
             engine.determineProximity([
                 {
@@ -248,7 +246,7 @@ describe('ATAEngine', () => {
     });
 
     context('when calculating flight zone', () => {
-        it('should return safe when longitudes are inexistant', () => {
+        it('should exclude airplanes when longitudes are invalid', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
                 identifier: 'BNA',
@@ -259,8 +257,7 @@ describe('ATAEngine', () => {
             engine.onGeneratedDistances = airplanes => {
                 assert.strictEqual(airplanes.length, 2);
                 const lax = airplanes[1];
-                assert.strictEqual(lax.identifier, 'LAX');
-                assert(lax.proximity.flightZone === 'safe');
+                assert.strictEqual(lax.proximity, undefined);
             };
             engine.determineProximity([
                 {
@@ -278,7 +275,7 @@ describe('ATAEngine', () => {
             ]);
         });
 
-        it('should return safe when latitudes are inexistant', () => {
+        it('should exclude airplanes when latitudes are invalid', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
                 identifier: 'BNA',
@@ -289,8 +286,7 @@ describe('ATAEngine', () => {
             engine.onGeneratedDistances = airplanes => {
                 assert.strictEqual(airplanes.length, 2);
                 const lax = airplanes[1];
-                assert.strictEqual(lax.identifier, 'LAX');
-                assert(lax.proximity.flightZone === 'safe');
+                assert.strictEqual(lax.proximity, undefined);
             };
             engine.determineProximity([
                 {
@@ -368,12 +364,42 @@ describe('ATAEngine', () => {
             ]);
         });
 
-        it('should return caution when distance is slightly greater than 5 nautical miles', () => {
+        it('should return danger when distance is slightly less than 3 nautical miles', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
                 identifier: 'BNA',
                 latitude: 50,
-                longitude: 5.12956,
+                longitude: 5,
+                lastUpdateDate: Date.now()
+            };
+            engine.onGeneratedDistances = airplanes => {
+                assert.strictEqual(airplanes.length, 2);
+                const lax = airplanes[1];
+                assert.strictEqual(lax.identifier, 'LAX');
+                assert(lax.proximity.flightZone === 'danger');
+            };
+            engine.determineProximity([
+                {
+                    identifier: 'BNA',
+                    latitude: 50,
+                    longitude: 5,
+                    lastUpdateDate: Date.now()
+                },
+                {
+                    identifier: 'LAX',
+                    latitude: 50,
+                    longitude: 5.077,
+                    lastUpdateDate: Date.now()
+                }
+            ]);
+        });
+
+        it('should return caution when distance is slightly greater than 3 nautical miles', () => {
+            const engine = new ATAEngine();
+            ATAEngine.origin =  {
+                identifier: 'BNA',
+                latitude: 50,
+                longitude: 5,
                 lastUpdateDate: Date.now()
             };
             engine.onGeneratedDistances = airplanes => {
@@ -386,24 +412,24 @@ describe('ATAEngine', () => {
                 {
                     identifier: 'BNA',
                     latitude: 50,
-                    longitude: 5.12956,
+                    longitude: 5,
                     lastUpdateDate: Date.now()
                 },
                 {
                     identifier: 'LAX',
                     latitude: 50,
-                    longitude: 5,
+                    longitude: 5.078,
                     lastUpdateDate: Date.now()
                 }
             ]);
         });
 
-        it('should return caution when distance is slightly less than 10 nautical miles', () => {
+        it('should return caution when distance is slightly less than 6 nautical miles', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
                 identifier: 'BNA',
                 latitude: 50,
-                longitude: 5.26,
+                longitude: 5,
                 lastUpdateDate: Date.now()
             };
             engine.onGeneratedDistances = airplanes => {
@@ -416,24 +442,24 @@ describe('ATAEngine', () => {
                 {
                     identifier: 'BNA',
                     latitude: 50,
-                    longitude: 5.258,
+                    longitude: 5,
                     lastUpdateDate: Date.now()
                 },
                 {
                     identifier: 'LAX',
                     latitude: 50,
-                    longitude: 5,
+                    longitude: 5.155,
                     lastUpdateDate: Date.now()
                 }
             ]);
         });
 
-        it('should return notice when distance is slightly greater than 10 nautical miles', () => {
+        it('should return notice when distance is slightly greater than 6 nautical miles', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
                 identifier: 'BNA',
                 latitude: 50,
-                longitude: 5.26,
+                longitude: 5,
                 lastUpdateDate: Date.now()
             };
             engine.onGeneratedDistances = airplanes => {
@@ -446,24 +472,24 @@ describe('ATAEngine', () => {
                 {
                     identifier: 'BNA',
                     latitude: 50,
-                    longitude: 5.26,
+                    longitude: 5,
                     lastUpdateDate: Date.now()
                 },
                 {
                     identifier: 'LAX',
                     latitude: 50,
-                    longitude: 5,
+                    longitude: 5.156,
                     lastUpdateDate: Date.now()
                 }
             ]);
         });
 
-        it('should return notice when distance is slightly less than 15 nautical miles', () => {
+        it('should return notice when distance is slightly less than 9 nautical miles', () => {
             const engine = new ATAEngine();
             ATAEngine.origin =  {
                 identifier: 'BNA',
                 latitude: 50,
-                longitude: 5.388,
+                longitude: 5,
                 lastUpdateDate: Date.now()
             };
             engine.onGeneratedDistances = airplanes => {
@@ -476,13 +502,13 @@ describe('ATAEngine', () => {
                 {
                     identifier: 'BNA',
                     latitude: 50,
-                    longitude: 5.388,
+                    longitude: 5,
                     lastUpdateDate: Date.now()
                 },
                 {
                     identifier: 'LAX',
                     latitude: 50,
-                    longitude: 5,
+                    longitude: 5.233,
                     lastUpdateDate: Date.now()
                 }
             ]);
@@ -493,7 +519,7 @@ describe('ATAEngine', () => {
             ATAEngine.origin =  {
                 identifier: 'BNA',
                 latitude: 50,
-                longitude: 5.39,
+                longitude: 5,
                 lastUpdateDate: Date.now()
             };
             engine.onGeneratedDistances = airplanes => {
@@ -506,13 +532,13 @@ describe('ATAEngine', () => {
                 {
                     identifier: 'BNA',
                     latitude: 50,
-                    longitude: 5.39,
+                    longitude: 5,
                     lastUpdateDate: Date.now()
                 },
                 {
                     identifier: 'LAX',
                     latitude: 50,
-                    longitude: 5,
+                    longitude: 5.234,
                     lastUpdateDate: Date.now()
                 }
             ]);
