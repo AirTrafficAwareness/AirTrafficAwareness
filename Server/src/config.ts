@@ -36,8 +36,9 @@ interface SimulationOptions extends BaseOptions {
     dataSource: DataSource.Simulation;
 }
 
-interface StreamOptions extends BaseOptions{
+interface StreamOptions extends BaseOptions {
     dataSource: DataSource.Stream;
+    url: string;
 }
 
 type Options = Dump1090Options | OpenSkyOptions | SimulationOptions | StreamOptions;
