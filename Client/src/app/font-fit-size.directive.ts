@@ -7,8 +7,8 @@ import { MatGridTile, MatGridTileText } from '@angular/material/grid-list';
 export class FontFitSizeDirective implements AfterContentChecked {
   window: Window;
 
-  @Input() minSize = 8;
-  @Input() maxSize = 92;
+  @Input() minSize = '8';
+  @Input() maxSize = '92';
 
   constructor(private el: ElementRef) {
   }
@@ -36,8 +36,10 @@ export class FontFitSizeDirective implements AfterContentChecked {
     const ratioWidth = fontSize / elementWidth;
     const ratioHeight = fontSize / elementHeight;
 
-    const newSizeWidth = Math.max(Math.min(parentWidth * ratioWidth, this.maxSize), this.minSize);
-    const newSizeHeight = Math.max(Math.min(parentHeight * ratioHeight, this.maxSize), this.minSize);
+    const maxSize = parseFloat(this.maxSize);
+    const minSize = parseFloat(this.minSize);
+    const newSizeWidth = Math.max(Math.min(parentWidth * ratioWidth, maxSize), minSize);
+    const newSizeHeight = Math.max(Math.min(parentHeight * ratioHeight, maxSize), minSize);
     const newSize = Math.min(newSizeHeight, newSizeWidth);
     element.style.paddingTop = `${headerHeight + 8}px`;
     element.style.fontSize = `${newSize}px`;
