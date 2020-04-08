@@ -1,26 +1,50 @@
 name: Guardians of the Compiler
+
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
+
+
 jobs:
   build:
-    name: Compile
-    uses: actions/merge
+
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: install server dependencies
-        run: |
-          cd server | npm install
-      - name: install client dependencies
-        run: |
-          cd client | npm install
-      - name: start up server
-        run: |
-          cd server | npm run build
-      - name: start client
-        run: |
-          cd client | npm run build
+      - name: Checkout
+        uses: actions/checkout@master
 
+      - name: Set Node.js 12.x
+        uses: actions/setup-node@master
+        with:
+          version: 12.x
 
+      - name: Install server dependencies
+        working-directory: Server/
+        run: |
+          npm ci
+
+      - name: Build server
+        working-directory: Server/
+        run: |
+          npm run build
+
+      - name: run tests on server
+        working-directory: Server/
+        run: |
+          npm run test
+
+      - name: Install client dependencies
+        working-directory: Client/
+        run: |
+          npm ci
+
+      - name: Build server
+        working-directory: Client/
+        run: |
+          npm run build
+
+      - name: run test on server
+          working-directory: Server/
+          run: |
+            npm run test
