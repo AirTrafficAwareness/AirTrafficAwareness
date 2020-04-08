@@ -8,5 +8,18 @@ on: [push]
       uses: actions/merge
       runs-on: ubuntu-latest
       steps:
+        - uses: actions/checkout@v2
+        - name: install server dependencies
+          run: |
+            cd server | npm install
+        - name: install client dependencies
+          run: |
+            cd client | npm install
+        - name: start up server
+-         run: |
+            cd server | npm run build
+        - name: start client
+          run: |
+            cd client | npm run build
 
 
