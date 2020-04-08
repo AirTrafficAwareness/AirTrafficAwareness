@@ -45,6 +45,6 @@ jobs:
           npm run build
 
       - name: run test on server
-          working-directory: Server/
-          run: |
-            npm run test
+        working-directory: Server/
+        run: |
+          npm run test
