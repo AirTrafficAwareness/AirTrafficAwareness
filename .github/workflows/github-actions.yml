@@ -1,5 +1,5 @@
 name: Guardians of the Compiler
-on: [push]
+on: push
   branches:
     - master
   jobs:
