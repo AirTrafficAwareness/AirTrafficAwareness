@@ -1,0 +1,12 @@
+name: Guardians of the Compiler
+on: [push]
+  branches:
+    - master
+  jobs:
+    build:
+      name: Compile
+      uses: actions/merge
+      runs-on: ubuntu-latest
+      steps:
+
+
