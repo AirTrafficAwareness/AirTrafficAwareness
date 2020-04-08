@@ -39,12 +39,12 @@ jobs:
         run: |
           npm ci
 
-      - name: Build server
+      - name: Build client
         working-directory: Client/
         run: |
           npm run build
 
-      - name: run test on server
+      - name: run test on client
         working-directory: Server/
         run: |
           npm run test
