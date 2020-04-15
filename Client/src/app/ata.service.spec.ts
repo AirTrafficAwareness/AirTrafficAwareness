@@ -3,10 +3,14 @@ import { TestBed } from '@angular/core/testing';
 import { ATAService } from './ata.service';
 
 describe('ATAService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: ATAService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(ATAService);
+  });
 
   it('should be created', () => {
-    const service: ATAService = TestBed.get(ATAService);
     expect(service).toBeTruthy();
   });
 });

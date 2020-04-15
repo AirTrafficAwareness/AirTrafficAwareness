@@ -16,7 +16,7 @@ export class ListComponent implements OnInit {
   public airplanes: Airplane[];
   public connected = false;
 
-  @Output() select = new EventEmitter<Airplane>();
+  @Output() selected = new EventEmitter<Airplane>();
 
   constructor(
     @Optional() public dialogRef: MatDialogRef<ListComponent>,
@@ -44,7 +44,7 @@ export class ListComponent implements OnInit {
     if (this.dialogRef) {
       this.dialogRef.close(item);
     } else {
-      this.select.next(item);
+      this.selected.next(item);
     }
   }
 

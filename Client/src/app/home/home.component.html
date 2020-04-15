@@ -1,7 +1,7 @@
 <mat-sidenav-container>
 
   <mat-sidenav class="sidebar" mode="over" opened position="start" [disableClose]="!current" #list>
-    <app-list (select)="selectAirplane($event)"></app-list>
+    <app-list (selected)="selectAirplane($event)"></app-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="dark-background">
