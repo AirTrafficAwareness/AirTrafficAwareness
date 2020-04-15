@@ -77,14 +77,14 @@ class App {
         clientListener.onClientConnected = airplane => ATAEngine.origin = airplane;
         engine.onGeneratedDistances = data => clientListener.send(data);
         this.app.route('/api/').get((req: Request, res: Response) => {
-
-            const latitude = req.query.latitude;
-            const longitude = req.query.longitude;
+            const identifier = req.query.identifier as string;
+            const latitude = parseFloat(req.query.latitude as string);
+            const longitude = parseFloat(req.query.longitude as string);
             if (!latitude || !longitude) {
                 res.status(400).json({error: {message: 'Query parameters `latitude` and `longitude` are required.'}});
                 return;
             }
-            ATAEngine.origin = req.query;
+            ATAEngine.origin = {identifier, latitude, longitude, lastUpdateDate: Date.now()};
             res.json({ok: req.query});
             dataSource.start();
         });
