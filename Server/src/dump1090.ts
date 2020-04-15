@@ -1,5 +1,5 @@
 import {DataSourceProtocol} from './dataSourceProtocol';
-import request from 'request';
+import request from './request';
 import {Airplane} from "./airplane";
 import {ATAEngine} from "./engine";
 import config, {DataSource} from "./config";
@@ -44,7 +44,7 @@ export class Dump1090 extends DataSourceProtocol {
     }
 
     loop() {
-        request(this.url, {json: true}, (err, res, body) => {
+        request(this.url).then(body => {
             this.onReceivedData(this.convert(body));
             setTimeout(() => this.loop(), this.loopInterval);
         });

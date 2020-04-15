@@ -1,5 +1,5 @@
 import {DataSourceProtocol} from './dataSourceProtocol';
-import request from 'request';
+import request from './request';
 import {Airplane, Coordinate} from "./airplane";
 import {ATAEngine} from "./engine";
 import config, {DataSource} from './config';
@@ -81,8 +81,7 @@ export class OpenSky extends DataSourceProtocol {
             params.auth = this.credentials;
         }
 
-        request('https://opensky-network.org/api/states/all', params, (err, res, body) => {
-            console.log('res', res);
+        request('https://opensky-network.org/api/states/all', params).then(body => {
             let airplanes = OpenSky.convert(body);
             this.onReceivedData(airplanes);
             setTimeout(() => this.loop(interval), interval);
