@@ -5,7 +5,7 @@ import {ATAEngine} from "./engine";
 import config, {DataSource} from './config';
 
 type OpenSkyData = {
-    time: number,
+    time: number;
     states: [
         string,          // icao24 - Unique ICAO 24-bit address of the transponder in hex string representation.
         string | null,   // callsign - Call sign of the vehicle (8 chars)
@@ -24,13 +24,13 @@ type OpenSkyData = {
         string | null,   // squawk - The transponder code aka Squawk. Can be null.
         boolean,         // spi - Whether flight status indicates special purpose indicator.
         number           // position_source - Origin of this state’s position - 0: ADS-B, 1: ASTERIX, 2: MLAT, 3: FLARM
-        ][] | null
+        ][] | null;
 }
 
 export class OpenSky extends DataSourceProtocol {
 
     started = false;
-    credentials?: {username: string, password: string};
+    credentials?: {username: string; password: string};
 
     constructor() {
         super();
@@ -82,7 +82,7 @@ export class OpenSky extends DataSourceProtocol {
         }
 
         request('https://opensky-network.org/api/states/all', params).then(body => {
-            let airplanes = OpenSky.convert(body);
+            const airplanes = OpenSky.convert(body);
             this.onReceivedData(airplanes);
             setTimeout(() => this.loop(interval), interval);
         });
@@ -108,7 +108,7 @@ export class OpenSky extends DataSourceProtocol {
 
 const meanEarthRadius = 6371e3; // meters
 const {PI, cos, sin, acos, asin, abs} = Math;
-type BoundingBox = { min: Coordinate, max: Coordinate };
+type BoundingBox = { min: Coordinate; max: Coordinate };
 
 export function calculateBoundingBox(center: Coordinate, length: number): BoundingBox {
     const lat = toRadians(center.latitude);
@@ -117,7 +117,7 @@ export function calculateBoundingBox(center: Coordinate, length: number): Boundi
     const latT = asin(sin(lat) / cos(latD));
     const lonD = acos((cos(latD) - sin(latT) * sin(lat)) / (cos(latT) * cos(lat)));
 
-    let latMin = lat - latD;
+    const latMin = lat - latD;
     let latMax = lat + latD;
     let lonMin = lon - lonD;
     let lonMax = lon + lonD;

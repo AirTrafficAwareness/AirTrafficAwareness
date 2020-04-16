@@ -6,19 +6,19 @@ import config, {DataSource} from "./config";
 import assert from "assert";
 
 type Dump1090Data = {
-    hex: string,
-    squawk: string,
-    flight: string,
-    lat: number,
-    lon: number,
-    validposition: boolean,
-    altitude: number,
-    vert_rate: number,
-    track: number,
-    validtrack: boolean,
-    speed: number,
-    messages: number,
-    seen: number
+    hex: string;
+    squawk: string;
+    flight: string;
+    lat: number;
+    lon: number;
+    validposition: boolean;
+    altitude: number;
+    vert_rate: number;
+    track: number;
+    validtrack: boolean;
+    speed: number;
+    messages: number;
+    seen: number;
 };
 
 export class Dump1090 extends DataSourceProtocol {
@@ -52,7 +52,7 @@ export class Dump1090 extends DataSourceProtocol {
 
     public convert(dump1090Data: Dump1090Data[]) {
         const now = Date.now();
-        let airplaneList = [];
+        const airplaneList = [];
         if (!dump1090Data || !Array.isArray(dump1090Data)) {
             return [];
         }

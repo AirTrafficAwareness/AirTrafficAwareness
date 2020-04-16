@@ -6,5 +6,5 @@ interface ReceivedDataFunction {
 
 export abstract class DataSourceProtocol {
     public onReceivedData: ReceivedDataFunction = (() => {});
-    public start() {}
+    public abstract start()
 }

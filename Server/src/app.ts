@@ -62,7 +62,7 @@ class App {
 
     listen(port: number, callback?: AppCallback) {
         const server = this.app.listen(port, 'localhost', () => {
-            let address = server.address();
+            const address = server.address();
             if (typeof address === "string") {
                 callback(null);
             } else {

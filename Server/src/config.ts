@@ -16,7 +16,7 @@ export enum Client {
 interface BaseOptions {
     client: Client;
     port: number;
-    launchOptions?: any
+    launchOptions?: any;
 }
 
 interface Dump1090Options extends BaseOptions {

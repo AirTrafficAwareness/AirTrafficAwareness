@@ -10,7 +10,7 @@ export class Simulation extends DataSourceProtocol {
             return;
         }
         console.log('starting simulation');
-        let data = data1;
+        const data = data1;
         this.started = true;
 
         let count = 0;
