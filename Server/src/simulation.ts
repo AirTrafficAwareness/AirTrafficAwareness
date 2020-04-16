@@ -1,11 +1,10 @@
 import {DataSourceProtocol} from "./dataSourceProtocol";
 import data1 from "./data/TestCase3.json";
-import {ATAEngine} from "./engine";
 
 export class Simulation extends DataSourceProtocol {
     started = false;
 
-    start() {
+    start(): void {
         if (this.started) {
             return;
         }

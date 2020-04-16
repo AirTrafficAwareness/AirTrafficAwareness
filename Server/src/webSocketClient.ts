@@ -8,7 +8,7 @@ export class WebSocketClient extends ClientProtocol {
 
     constructor(server: http.Server) {
         super(server);
-        const wss = new WebSocket.Server({server});
+        const wss = new WebSocket.Server({ server });
         wss.on('connection', (ws: WebSocket) => {
             this.client = ws;
             ws.on('message', (message: string) => {
@@ -17,17 +17,17 @@ export class WebSocketClient extends ClientProtocol {
                 const json = JSON.parse(message);
                 if (json.identifier) {
                     this.onClientConnected(json);
-                    ws.send(JSON.stringify({ok: {json}}));
+                    ws.send(JSON.stringify({ ok: { json } }));
                 } else {
-                    ws.send(JSON.stringify({error: {json}}));
+                    ws.send(JSON.stringify({ error: { json } }));
                 }
             });
 
-            ws.send(JSON.stringify({ok: 'identify'}));
+            ws.send(JSON.stringify({ ok: 'identify' }));
         });
     }
 
-    send(airplanes: Airplane[]) {
+    send(airplanes: Airplane[]): void {
         if (this.client && this.client.OPEN) {
             try {
                 this.client.send(JSON.stringify(airplanes));

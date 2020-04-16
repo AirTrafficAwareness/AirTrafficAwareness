@@ -4,14 +4,6 @@ import * as querystring from "querystring";
 import * as http from "http";
 import {IncomingMessage} from "http";
 
-type Json =
-    | null
-    | boolean
-    | number
-    | string
-    | Json[]
-    | { [prop: string]: Json };
-
 interface RequestParams {
     qs?: {
         [key: string]: string | number | boolean | string[] | number[] | boolean[] | undefined | null;
@@ -22,12 +14,12 @@ interface RequestParams {
     };
 }
 
-export default function request(urlStr: string, params?: RequestParams): Promise<any> {
+export default function request<T>(urlStr: string, params?: RequestParams): Promise<T> {
     const requestURL = new URL(urlStr);
     if (params) {
         if (params.qs) {
             const qs = querystring.parse(querystring.stringify(params.qs));
-            Object.entries(qs).forEach(([key, value]) => {
+            Object.entries(qs).forEach(([ key, value ]) => {
                 if (Array.isArray(value)) {
                     for (const v of value) {
                         requestURL.searchParams.append(key, v);
@@ -43,15 +35,15 @@ export default function request(urlStr: string, params?: RequestParams): Promise
         }
     }
 
-    return new Promise<Json>((resolve, reject) => {
+    return new Promise<T>((resolve, reject) => {
         const callback = (res: IncomingMessage): void => {
             let body = '';
 
-            res.on('data', function(chunk){
+            res.on('data', function (chunk) {
                 body += chunk;
             });
 
-            res.on('end', function(){
+            res.on('end', function () {
                 resolve(JSON.parse(body));
             });
         };

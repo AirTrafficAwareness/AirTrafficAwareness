@@ -1,4 +1,5 @@
 import json from '../config.json';
+import open from "open";
 
 export enum DataSource {
     Dump1090 = 'dump1090',
@@ -16,7 +17,7 @@ export enum Client {
 interface BaseOptions {
     client: Client;
     port: number;
-    launchOptions?: any;
+    launchOptions?: open.Options;
 }
 
 interface Dump1090Options extends BaseOptions {

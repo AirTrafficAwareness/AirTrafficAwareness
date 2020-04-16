@@ -24,13 +24,13 @@ type OpenSkyData = {
         string | null,   // squawk - The transponder code aka Squawk. Can be null.
         boolean,         // spi - Whether flight status indicates special purpose indicator.
         number           // position_source - Origin of this state’s position - 0: ADS-B, 1: ASTERIX, 2: MLAT, 3: FLARM
-        ][] | null;
+    ][] | null;
 }
 
 export class OpenSky extends DataSourceProtocol {
 
     started = false;
-    credentials?: {username: string; password: string};
+    credentials?: { username: string; password: string };
 
     constructor() {
         super();
@@ -65,14 +65,14 @@ export class OpenSky extends DataSourceProtocol {
         return airplanes;
     }
 
-    loop(interval) {
+    loop(interval): void {
         const {
-            min: {latitude: lamin, longitude: lomin},
-            max: {latitude: lamax, longitude: lomax}
+            min: { latitude: lamin, longitude: lomin },
+            max: { latitude: lamax, longitude: lomax }
         } = calculateBoundingBox(ATAEngine.origin, 100000);
 
         const params = {
-            qs: {lamin, lomin, lamax, lomax},
+            qs: { lamin, lomin, lamax, lomax },
             json: true,
             auth: undefined
         };
@@ -81,14 +81,14 @@ export class OpenSky extends DataSourceProtocol {
             params.auth = this.credentials;
         }
 
-        request('https://opensky-network.org/api/states/all', params).then(body => {
+        request<OpenSkyData>('https://opensky-network.org/api/states/all', params).then(body => {
             const airplanes = OpenSky.convert(body);
             this.onReceivedData(airplanes);
             setTimeout(() => this.loop(interval), interval);
         });
     }
 
-    start() {
+    start(): void {
         if (this.started) {
             return;
         }
@@ -107,7 +107,7 @@ export class OpenSky extends DataSourceProtocol {
 }
 
 const meanEarthRadius = 6371e3; // meters
-const {PI, cos, sin, acos, asin, abs} = Math;
+const { PI, cos, sin, acos, asin, abs } = Math;
 type BoundingBox = { min: Coordinate; max: Coordinate };
 
 export function calculateBoundingBox(center: Coordinate, length: number): BoundingBox {

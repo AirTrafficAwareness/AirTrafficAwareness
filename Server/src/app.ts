@@ -60,7 +60,7 @@ class App {
 
     }
 
-    listen(port: number, callback?: AppCallback) {
+    listen(port: number, callback?: AppCallback): void {
         const server = this.app.listen(port, 'localhost', () => {
             const address = server.address();
             if (typeof address === "string") {
@@ -73,19 +73,25 @@ class App {
         const dataSource: DataSourceProtocol = App.getDataSource();
         const engine = new ATAEngine();
 
-        dataSource.onReceivedData = data => engine.determineProximity(data);
-        clientListener.onClientConnected = airplane => ATAEngine.origin = airplane;
-        engine.onGeneratedDistances = data => clientListener.send(data);
+        dataSource.onReceivedData = (data): void => {
+            engine.determineProximity(data)
+        };
+        clientListener.onClientConnected = (airplane): void => {
+            ATAEngine.origin = airplane
+        };
+        engine.onGeneratedDistances = (data): void => {
+            clientListener.send(data)
+        };
         this.app.route('/api/').get((req: Request, res: Response) => {
             const identifier = req.query.identifier as string;
             const latitude = parseFloat(req.query.latitude as string);
             const longitude = parseFloat(req.query.longitude as string);
             if (!latitude || !longitude) {
-                res.status(400).json({error: {message: 'Query parameters `latitude` and `longitude` are required.'}});
+                res.status(400).json({ error: { message: 'Query parameters `latitude` and `longitude` are required.' } });
                 return;
             }
-            ATAEngine.origin = {identifier, latitude, longitude, lastUpdateDate: Date.now()};
-            res.json({ok: req.query});
+            ATAEngine.origin = { identifier, latitude, longitude, lastUpdateDate: Date.now() };
+            res.json({ ok: req.query });
             dataSource.start();
         });
 

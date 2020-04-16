@@ -1,9 +1,7 @@
 import {DataSourceProtocol} from './dataSourceProtocol';
 import request from './request';
 import {Airplane} from "./airplane";
-import {ATAEngine} from "./engine";
 import config, {DataSource} from "./config";
-import assert from "assert";
 
 type Dump1090Data = {
     hex: string;
@@ -36,21 +34,21 @@ export class Dump1090 extends DataSourceProtocol {
         }
     }
 
-    start() {
+    start(): void {
         if (this.started) {
             return;
         }
         this.loop();
     }
 
-    loop() {
-        request(this.url).then(body => {
+    loop(): void {
+        request<Dump1090Data[]>(this.url).then(body => {
             this.onReceivedData(this.convert(body));
             setTimeout(() => this.loop(), this.loopInterval);
         });
     }
 
-    public convert(dump1090Data: Dump1090Data[]) {
+    public convert(dump1090Data: Dump1090Data[]): Airplane[] {
         const now = Date.now();
         const airplaneList = [];
         if (!dump1090Data || !Array.isArray(dump1090Data)) {

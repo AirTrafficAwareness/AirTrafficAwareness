@@ -21,7 +21,7 @@ export class Dump1090Stream extends DataSourceProtocol {
         })
     }
 
-    start() {
+    start(): void {
         if (this.started) {
             return;
         }
@@ -41,7 +41,7 @@ export class Dump1090Stream extends DataSourceProtocol {
         }, 1000);
     }
 
-    private convert(dump1090Data: Buffer) {
+    private convert(dump1090Data: Buffer): void {
         const lines = dump1090Data.toString('utf-8').split('\r\n');
         for (const rawData of lines) {
             if (!rawData) {
@@ -60,25 +60,25 @@ export class Dump1090Stream extends DataSourceProtocol {
                 longitude: 0,
                 lastUpdateDate: 0
             };
-            Object.assign(airplane, {lastUpdateDate: Date.now()});
+            Object.assign(airplane, { lastUpdateDate: Date.now() });
 
             if (flightNumber) {
-                Object.assign(airplane, {flightNumber});
+                Object.assign(airplane, { flightNumber });
             }
             if (groundSpeed) {
-                Object.assign(airplane, {groundSpeed})
+                Object.assign(airplane, { groundSpeed })
             }
             if (altitude) {
-                Object.assign(airplane, {altitude})
+                Object.assign(airplane, { altitude })
             }
             if (latitude) {
-                Object.assign(airplane, {latitude});
+                Object.assign(airplane, { latitude });
             }
             if (longitude) {
-                Object.assign(airplane, {longitude});
+                Object.assign(airplane, { longitude });
             }
             if (heading) {
-                Object.assign(airplane, {heading});
+                Object.assign(airplane, { heading });
             }
 
             this.airplaneData[hexIdentifier] = airplane;
@@ -87,7 +87,7 @@ export class Dump1090Stream extends DataSourceProtocol {
         this.onReceivedData(this.airplanes);
     }
 
-    private removeExpired() {
+    private removeExpired(): Airplane[] {
         const now = Date.now();
         return Object.values(this.airplaneData).filter(airplane => {
             if (now - airplane.lastUpdateDate > 60000) {
