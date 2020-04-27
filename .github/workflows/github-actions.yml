@@ -23,16 +23,16 @@ jobs:
         with:
           path: Client/
           key: ${{ runner.os }}-node-${{ hashFiles('**package-lock.json') }}
-            restore-keys: |
-              ${{ runner.os }}-node-
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Cache server node modules
           uses: actions/cache@v1
           with:
             path: Server/
             key: ${{ runner.os }}-node-${{ hashFiles('**package-lock.json') }}
-              restore-keys: |
-                ${{ runner.os }}-node-
+            restore-keys: |
+              ${{ runner.os }}-node-
 
 
       - name: Set-up Node version ${{ matrix.node-version }}
