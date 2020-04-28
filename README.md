@@ -19,3 +19,4 @@ To run Server from root directory on CLI run:
 `npm ci`
 
 `npm install`
+
