@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest]
         node-version: [12.x, 10.x]
 
     steps:
@@ -22,17 +22,17 @@ jobs:
         uses: actions/cache@v1
         with:
           path: Client/
-          key: ${{ runner.os }}-node-${{ hashFiles('**package-lock.json') }}
+          key: ${{ runner.os }}-nodes-${{ hashFiles('**package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-nodes-
 
       - name: Cache server node modules
         uses: actions/cache@v1
         with:
           path: Server/
-          key: ${{ runner.os }}-node-${{ hashFiles('**package-lock.json') }}
+          key: ${{ runner.os }}-nodes-${{ hashFiles('**package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-nodes-
 
 
       - name: Set-up Node version ${{ matrix.node-version }}
