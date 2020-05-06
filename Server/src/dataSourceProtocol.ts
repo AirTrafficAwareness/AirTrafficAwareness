@@ -1,4 +1,4 @@
-import {Airplane} from "./airplane";
+import {Airplane, Coordinate} from "./airplane";
 
 interface ReceivedDataFunction {
     (airplanes: Airplane[]): void;
@@ -6,5 +6,5 @@ interface ReceivedDataFunction {
 
 export abstract class DataSourceProtocol {
     public onReceivedData: ReceivedDataFunction = (() => {});
-    public abstract start()
+    public abstract start(origin: Coordinate)
 }

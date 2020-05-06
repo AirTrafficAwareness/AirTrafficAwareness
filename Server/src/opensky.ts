@@ -1,7 +1,6 @@
 import {DataSourceProtocol} from './dataSourceProtocol';
 import request from './request';
 import {Airplane, Coordinate} from "./airplane";
-import {ATAEngine} from "./engine";
 import config, {DataSource} from './config';
 
 type OpenSkyData = {
@@ -31,6 +30,7 @@ export class OpenSky extends DataSourceProtocol {
 
     started = false;
     credentials?: { username: string; password: string };
+    origin?: Coordinate;
 
     constructor() {
         super();
@@ -69,7 +69,7 @@ export class OpenSky extends DataSourceProtocol {
         const {
             min: { latitude: lamin, longitude: lomin },
             max: { latitude: lamax, longitude: lomax }
-        } = calculateBoundingBox(ATAEngine.origin, 100000);
+        } = calculateBoundingBox(this.origin, 100000);
 
         const params = {
             qs: { lamin, lomin, lamax, lomax },
@@ -88,12 +88,13 @@ export class OpenSky extends DataSourceProtocol {
         });
     }
 
-    start(): void {
+    start(origin: Coordinate): void {
         if (this.started) {
             return;
         }
 
-        if (ATAEngine.origin) {
+        if (origin) {
+            this.origin = origin;
             this.started = true;
             // OpenSky users can retrieve data with a time resolution of 5 seconds.
             if (this.credentials) {
