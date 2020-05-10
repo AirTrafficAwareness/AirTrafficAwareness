@@ -136,6 +136,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
 class AirplaneView {
   touched = false;
+  private audio: HTMLAudioElement;
+  private dangerSound: string;
 
   constructor(public svgElement: SVGGElement) {}
 
@@ -144,10 +146,19 @@ class AirplaneView {
     this.svgElement.classList.forEach(className => {
       this.svgElement.classList.remove(className);
     });
-
+    this.dangerSound = '/src/goes/here';
     this.svgElement.classList.add('airplane');
     this.svgElement.classList.add(proximity.flightZone);
-
+    if (this.airplane.proximity.flightZone === 'notice') {
+      this.audio = new Audio();
+      this.audio.src = this.dangerSound;
+      this.audio.load();
+      this.audio.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+      }, false);
+      this.audio.play();
+    }
     this.svgElement.dataset.distance = `${proximity.distance}`;
     this.svgElement.dataset.heading = `${airplane.heading}`;
 
