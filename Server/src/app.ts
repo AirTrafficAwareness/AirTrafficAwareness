@@ -17,6 +17,10 @@ import {DebugClient} from "./debugClient";
 import config, {Client, DataSource} from "./config";
 import http from "http";
 
+/*
+Here you will find the driving code for the application, it runs the engine and wraps it around express
+code used to communicate to the client.
+ */
 class App {
 
     readonly www = path.join(__dirname, '../www');

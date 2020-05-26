@@ -1,6 +1,7 @@
 import json from '../config.json';
 import open from "open";
 
+// This script is where all static configs on the server side a stored.
 export enum DataSource {
     Dump1090 = 'dump1090',
     OpenSky = 'openSky',

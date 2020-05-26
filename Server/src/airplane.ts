@@ -1,4 +1,7 @@
-
+/*
+Below you will find the definition of the interfaces required for an any ADS-B compatible
+vehicle.
+ */
 export interface Coordinate {
     latitude: number;
     longitude: number;
