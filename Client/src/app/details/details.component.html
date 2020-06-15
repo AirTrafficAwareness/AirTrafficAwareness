@@ -1,14 +1,14 @@
 <div *ngIf="airplane">
   <div class="details">
     <h2 class="mat-title identifier">{{airplane.flightNumber.trim() | uppercase}}
-      ({{airplane.identifier.trim() | uppercase}})</h2>
+      ({{airplane.nNumber | uppercase}})</h2>
     <span class="mat-subheading-2">{{airplane.latitude | number:'1.3-3'}}
       , {{airplane.longitude | number:'1.3-3'}}</span>
   </div>
   <mat-grid-list cols="2" [rowHeight]="isCurrent ? '150px' : '150px'">
     <mat-grid-tile [colspan]="isCurrent ? 2 : 1">
       <mat-grid-tile-header>
-        VELOCITY
+        Ground Speed
       </mat-grid-tile-header>
       <div appFontFitSize [maxSize]="isCurrent ? '60' : '24'">
         {{airplane.groundSpeed | number:'1.0-0'}} kt

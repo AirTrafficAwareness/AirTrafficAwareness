@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private updateAirplane(airplane: Airplane) {
-    const {heading, identifier, proximity} = airplane;
+    const {heading, identifier, proximity,nNumber} = airplane;
 
     if (!proximity || !proximity.position || (!proximity.position.x && !proximity.position.y)) {
       return;
