@@ -3,19 +3,24 @@ import request from './request';
 import {Airplane} from "./airplane";
 import config, {DataSource} from "./config";
 
+type Dump1090_fa = {
+    now: number;
+    messages: string;
+    aircraft: Dump1090Data[];
+}
 type Dump1090Data = {
     hex: string;
     squawk: string;
     flight: string;
     lat: number;
     lon: number;
-    validposition: boolean;
-    altitude: number;
-    vert_rate: number;
+    //validposition: boolean;
+    alt_baro: number;
+    //vert_rate: number;
     track: number;
-    validtrack: boolean;
-    speed: number;
-    messages: number;
+    //validtrack: boolean;
+    gs: number;
+    //messages: number;
     seen: number;
 };
 
@@ -30,7 +35,8 @@ export class Dump1090 extends DataSourceProtocol {
         if (config.dataSource === DataSource.Dump1090 && config.url) {
             this.url = config.url;
         } else {
-            this.url = 'http://localhost:8080/data.json';
+            //'http://localhost:8080/data.json';
+            this.url = 'http://192.168.1.5:8080/data/aircraft.json';
         }
     }
 
@@ -56,18 +62,17 @@ export class Dump1090 extends DataSourceProtocol {
         }
 
         dump1090Data.forEach(function (val) {
-            if (val.validposition) {
+            if (val.flight) {
                 const airplane: Airplane = {
                     identifier: val.hex,
                     flightNumber: val.flight || val.squawk,
-                    groundSpeed: val.speed,
-                    altitude: val.altitude,
+                    groundSpeed: val.gs,
+                    altitude: val.alt_baro,
                     latitude: val.lat,
                     longitude: val.lon,
-                    heading: val.validtrack ? val.track : undefined,
+                    heading: val.track ? val.track : undefined,
                     lastUpdateDate: now - val.seen
                 };
-
                 airplaneList.push(airplane);
             }
         });

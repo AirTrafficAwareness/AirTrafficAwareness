@@ -84,13 +84,14 @@ class App {
         };
         this.app.route('/api/').get((req: Request, res: Response) => {
             const identifier = req.query.identifier as string;
+            const nNumber = req.query.nNumber as string;
             const latitude = parseFloat(req.query.latitude as string);
             const longitude = parseFloat(req.query.longitude as string);
             if (!latitude || !longitude) {
                 res.status(400).json({ error: { message: 'Query parameters `latitude` and `longitude` are required.' } });
                 return;
             }
-            ATAEngine.origin = { identifier, latitude, longitude, lastUpdateDate: Date.now() };
+            ATAEngine.origin = { identifier, latitude, longitude, lastUpdateDate: Date.now(), nNumber };
             res.json({ ok: req.query });
             dataSource.start();
         });
