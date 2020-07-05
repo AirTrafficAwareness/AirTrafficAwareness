@@ -7,6 +7,7 @@ export class Dump1090Stream extends DataSourceProtocol {
     started = false;
     airplaneData: { [hexIdentifier: string]: Airplane } = {};
     url: string;
+    client: net.Socket;
 
     constructor() {
         super();
@@ -26,10 +27,10 @@ export class Dump1090Stream extends DataSourceProtocol {
             return;
         }
 
-        const client = net.connect(30003, this.url, function () {
+        this.client = net.connect(30003, this.url, function () {
             console.log('Connected to Dump1090 stream.');
         });
-        client.on('data', (data: Buffer) => {
+        this.client.on('data', (data: Buffer) => {
             this.convert(data)
         });
 
