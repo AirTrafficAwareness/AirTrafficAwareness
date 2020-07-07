@@ -24,7 +24,7 @@
       <mat-list-item *ngFor="let item of airplanes" (click)="itemSelected(item)">
         <h4 mat-line>
           {{(item.flightNumber || "Unknown").trim() | uppercase}}
-          ({{item.identifier | uppercase}})
+          ({{item.nNumber | uppercase}})
         </h4>
         <p mat-line> {{item.proximity.distance | number: '1.1-1'}} NM - {{ item.heading | number:'1.0-0' }}&deg;</p>
       </mat-list-item>

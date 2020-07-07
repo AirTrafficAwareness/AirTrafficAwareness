@@ -32,6 +32,7 @@ export class WebSocketClient extends ClientProtocol {
             try {
                 this.client.send(JSON.stringify(airplanes));
             } catch (e) {
+                //TODO handl the exception. 
                 this.client = null;
                 console.error('Error', e);
             }

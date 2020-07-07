@@ -1,4 +1,5 @@
 import {Airplane, Coordinate, Point} from './airplane';
+import faaNumbers from "./NMASTER.json"
 
 type CallbackFunction = (airplanes: Airplane[]) => void;
 
@@ -36,16 +37,29 @@ export class ATAEngine {
             if (Math.abs(airplane.latitude) > 90 || Math.abs(airplane.longitude) > 180) {
                 return;
             }
+           let nNumber:string;
+           if(faaNumbers[airplane.identifier.toUpperCase()]){
+            nNumber = "N"+faaNumbers[airplane.identifier.toUpperCase()]; 
+           }
             Object.assign(airplane, {
                 proximity: {
                     distance: toNauticalMiles(distanceInMeters),
                     flightZone: calculateFlightZone(distanceInMeters, flightZones),
                     position: coordinateToPoint(airplane, ATAEngine.origin, flightZones.notice)
-                }
+                },
+                nNumber
             });
         });
-
+        //this.saveToFile('record.json',airplanes);
         this.onGeneratedDistances(airplanes);
+    }
+    private saveToFile(fileName, airplanes):void {
+        const fs = require('fs');
+        const BSON = require('bson'); 
+        var stream = fs.createWriteStream(fileName, {flags:'a'});
+        const data = BSON.serialize(airplanes);
+        stream.write(data);
+        stream.close();
     }
 }
 

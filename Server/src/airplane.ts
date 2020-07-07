@@ -25,4 +25,5 @@ export interface Airplane extends Coordinate {
     heading?: number;
     lastUpdateDate: number;
     proximity?: Proximity;
+    nNumber?: string;
 }
