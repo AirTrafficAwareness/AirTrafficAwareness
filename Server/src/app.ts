@@ -17,7 +17,7 @@ import {DebugClient} from "./debugClient";
 import config, {Client, DataSource} from "./config";
 import http from "http";
 
-class App {
+export class App {
 
     readonly www = path.join(__dirname, '../www');
     public app: express.Application;

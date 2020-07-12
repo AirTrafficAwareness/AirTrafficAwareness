@@ -4,7 +4,7 @@ import * as querystring from "querystring";
 import * as http from "http";
 import {IncomingMessage} from "http";
 
-interface RequestParams {
+export interface RequestParams {
     qs?: {
         [key: string]: string | number | boolean | string[] | number[] | boolean[] | undefined | null;
     };
