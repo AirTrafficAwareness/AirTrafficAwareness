@@ -1,0 +1,29 @@
+name: Lord of Coverage
+
+on:
+  push:
+    branches: [ '*' ]
+
+jobs:
+  build:
+    timeout-minutes: 20
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        node-version: [12.x, 10.x]
+
+    steps:
+      - name: Coverage
+      - uses: actions/checkout@master
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: Server/test/
+          flags: unittests
+          fail_ci_if_error: true
+          path_to_write_report: ./coverage/codecov_report.gz
+
+        
+
+
