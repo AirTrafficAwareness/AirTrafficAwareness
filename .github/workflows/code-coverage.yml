@@ -20,9 +20,9 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           language: node_js
           scripts:
-            - npm install codecov -g
+            npm install codecov -g
           after_success:
-            - codecov
+            codecov
           directory: Server/test/
           flags: unittests
           fail_ci_if_error: true
