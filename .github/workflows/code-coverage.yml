@@ -14,19 +14,19 @@ jobs:
         node-version: [12.x, 10.x]
 
     steps:
-      - name: Coverage
+     - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Install server dependencies, run builds and test, and generate coverage report
+        working-directory: Server/
+        run: |
+          npm ci
+          npm run build
+          npm run test -- --coverage
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          language: node_js
-          scripts:
-            npm install codecov -g
-          after_success:
-            codecov
-          directory: Server/test/
-          flags: unittests
-          fail_ci_if_error: true
-          path_to_write_report: ./coverage/codecov_report.gz
 
         
 
