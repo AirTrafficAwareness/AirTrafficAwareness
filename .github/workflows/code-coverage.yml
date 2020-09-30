@@ -1,0 +1,33 @@
+name: Lord of Coverage
+
+on:
+  push:
+    branches: [ '*' ]
+
+jobs:
+  build:
+    timeout-minutes: 20
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+        node-version: [12.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Install server dependencies, run builds and test, and generate coverage report
+        working-directory: Server/
+        run: |
+          npm ci
+          npm run build
+          npm run test -- --coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+        
+
+
