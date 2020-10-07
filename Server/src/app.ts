@@ -74,6 +74,11 @@ class App {
         dataSource.onReceivedData = (data): void => {
             clientListener.send(data)
         };
+        clientListener.onClientConnected = (airplane): void => {
+            console.log('noop');
+            // ATAEngine.origin = airplane
+        };
+
         this.app.route('/api/').get((req: Request, res: Response) => {
             const latitude = parseFloat(req.query.latitude as string);
             const longitude = parseFloat(req.query.longitude as string);
