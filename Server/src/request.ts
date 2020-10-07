@@ -37,6 +37,8 @@ export default function request<T>(urlStr: string, params?: RequestParams): Prom
 
     return new Promise<T>((resolve, reject) => {
         const callback = (res: IncomingMessage): void => {
+            console.log('response status', res.statusCode, res.statusMessage);
+            console.log('response headers', res.headers);
             let body = '';
 
             res.on('data', function (chunk) {
@@ -44,10 +46,12 @@ export default function request<T>(urlStr: string, params?: RequestParams): Prom
             });
 
             res.on('end', function () {
+                console.log('response body', body);
                 resolve(JSON.parse(body));
             });
         };
 
+        console.log('requestURL', requestURL);
         if (requestURL.protocol === 'https:') {
             https.get(requestURL, callback).on('error', reject);
         } else if (requestURL.protocol === 'http:') {
