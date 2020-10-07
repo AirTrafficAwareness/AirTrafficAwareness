@@ -1,6 +1,6 @@
 {
-  "appId": "com.airtrafficawareness.ATAClient",
-  "appName": "ATA Client",
+  "appId": "com.airtrafficawareness.Saga",
+  "appName": "Saga",
   "bundledWebRuntime": true,
   "npmClient": "npm",
   "webDir": "dist/Client"
