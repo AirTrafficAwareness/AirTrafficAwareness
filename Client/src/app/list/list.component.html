@@ -1,10 +1,29 @@
-<ng-container *ngIf="!connected">
-  <h2>Connecting to Server</h2>
+<ng-container *ngIf="!connected && isAutoConnecting">
+  <h2>Connecting to Receiver</h2>
   <p>Please wait while connecting.</p>
 </ng-container>
 
+<mat-card *ngIf="!connected && !isAutoConnecting">
+  <mat-card-header>Connect to Server</mat-card-header>
+  <mat-list>
+    <mat-list-item>
+      <mat-form-field>
+        <mat-label>Server Address</mat-label>
+        <input matInput type="url" [placeholder]="defaultServer" [(ngModel)]="serverAddress">
+        <button mat-button *ngIf="serverAddress" matSuffix mat-icon-button aria-label="Clear"
+                (click)="serverAddress=''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </mat-list-item>
+  </mat-list>
+  <mat-card-content>
+    <button mat-raised-button color="primary" (click)="connect($event)">Connect</button>
+  </mat-card-content>
+</mat-card>
+
 <ng-container *ngIf="connected">
-  <h2>{{airplanes ? 'Select your Airplane' : 'Searching for Airplanes&hellip;'}}</h2>
+  <h2>{{airplanes ? 'Select an Airplane' : 'Searching for Airplanes&hellip;'}}</h2>
   <div>
     <mat-list>
       <mat-list-item *ngFor="let item of airplanes" (click)="itemSelected(item)">

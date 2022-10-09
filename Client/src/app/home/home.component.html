@@ -1,6 +1,6 @@
 <mat-sidenav-container>
 
-  <mat-sidenav class="sidebar" mode="over" opened position="start" [disableClose]="!current" #list>
+  <mat-sidenav class="sidebar" mode="over" position="start" [disableClose]="!current" #list>
     <app-list (selected)="selectAirplane($event)"></app-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -13,7 +13,7 @@
         </button>
         <button [hidden]="detailsComponent.isCurrent" mat-button (click)="showDetails($event, ata.currentAirplane)"><mat-icon>clear</mat-icon></button>
       </div>
-      <app-details [airplane]="ata.currentAirplane" #detailsComponent></app-details>
+      <app-details #detailsComponent></app-details>
       <div id="legend">
         <div class="item">
           <div class="icon danger"></div>

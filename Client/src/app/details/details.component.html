@@ -1,6 +1,6 @@
 <div *ngIf="airplane">
   <div class="details">
-    <h2 class="mat-title identifier">{{airplane.flightNumber.trim() | uppercase}}
+    <h2 class="mat-title identifier">{{(airplane.flightNumber || "Unknown").trim() | uppercase}}
       ({{airplane.nNumber | uppercase}})</h2>
     <span class="mat-subheading-2">{{airplane.latitude | number:'1.3-3'}}
       , {{airplane.longitude | number:'1.3-3'}}</span>

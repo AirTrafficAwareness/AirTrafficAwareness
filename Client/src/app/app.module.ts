@@ -23,7 +23,6 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {FormsModule} from '@angular/forms';
 import {FontFitSizeDirective} from './font-fit-size.directive';
-import {Zeroconf} from '@ionic-native/zeroconf/ngx';
 
 @NgModule({
   declarations: [
@@ -52,7 +51,7 @@ import {Zeroconf} from '@ionic-native/zeroconf/ngx';
     MatSnackBarModule,
     MatToolbarModule
   ],
-  providers: [Zeroconf],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

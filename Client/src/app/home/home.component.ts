@@ -5,6 +5,7 @@ import {DetailsComponent} from '../details/details.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
+import {GDL90Service} from '../gdl90.service';
 
 @Component({
   selector: 'app-home',
@@ -26,7 +27,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef,
     // private modalController: ModalController,
     // private popoverController: PopoverController,
-    public ata: ATAService) {
+    public ata: ATAService,
+    public gdl90: GDL90Service) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -36,11 +38,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
     airplaneNode.remove();
     this.airplaneNode = airplaneNode;
 
-    this.ata.airplanes.subscribe(airplanes => this.updateAirplanes(airplanes));
+    if (this.gdl90.isAvailable) {
+      this.gdl90.airplanes.subscribe(airplanes => this.updateAirplanes(airplanes));
+    } else {
+      this.ata.airplanes.subscribe(airplanes => this.updateAirplanes(airplanes));
+    }
   }
 
   private updateAirplanes(airplanes: Airplane[]) {
-    this.current = Boolean(this.ata.currentAirplane);
+    this.current = this.gdl90.isAvailable || Boolean(this.ata.currentAirplane);
 
     // Mark all existing views for deletion.
     Object.values(this.views).forEach(view => view.touched = false);
@@ -60,13 +66,15 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (!this.ata.currentAirplane) {
+    if (this.gdl90.isAvailable) {
+      this.gdl90.startListener();
+    } else if (!this.ata.currentAirplane) {
       setTimeout(() => this.showList());
     }
   }
 
   selectAirplane(airplane: Airplane) {
-    if (!this.ata.currentAirplane) {
+    if (!this.gdl90.isAvailable && !this.ata.currentAirplane) {
       this.ata.currentAirplane = airplane;
       setTimeout(() => {
         const airplanes = this.ata.airplanes.getValue();
@@ -108,7 +116,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private updateAirplane(airplane: Airplane) {
-    const {heading, identifier, proximity,nNumber} = airplane;
+    const {heading, identifier, proximity} = airplane;
 
     if (!proximity || !proximity.position || (!proximity.position.x && !proximity.position.y)) {
       return;
@@ -124,7 +132,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.views[identifier] = view;
     }
 
-    if (this.ata.currentAirplane && identifier === this.ata.currentAirplane.identifier) {
+    const currentAirplane = this.gdl90.isAvailable ? this.gdl90.currentAirplane : this.ata.currentAirplane;
+    if (currentAirplane && identifier === currentAirplane.identifier) {
       this.container.setAttribute('transform', `rotate(${-heading} 360 360)`);
       airplane.proximity.flightZone = 'safe';
     }

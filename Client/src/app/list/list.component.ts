@@ -1,16 +1,16 @@
-import {AfterViewInit, Component, EventEmitter, NgZone, OnInit, Optional, Output} from '@angular/core';
+import {Component, EventEmitter, Optional, Output} from '@angular/core';
 import {Airplane, Coordinate} from '../airplane';
 import {ATAService} from '../ata.service';
-import {MatDialogRef} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Zeroconf} from '@ionic-native/zeroconf/ngx';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {GDL90Service} from '../gdl90.service';
 
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent implements AfterViewInit {
+export class ListComponent {
 
   public defaultServer = 'localhost:3000';
   public serverAddress = '';
@@ -23,12 +23,23 @@ export class ListComponent implements AfterViewInit {
     @Optional() public dialogRef: MatDialogRef<ListComponent>,
     private snackBar: MatSnackBar,
     private ata: ATAService,
-    private zeroconf: Zeroconf,
-    private zone: NgZone) {
-    this.ata.airplanes.subscribe(airplanes => {
-      airplanes.sort((a, b) => a.proximity.distance - b.proximity.distance);
-      this.airplanes = airplanes;
-    });
+    private gdl90: GDL90Service) {
+    if (this.gdl90.isAvailable) {
+      this.connected = true;
+      this.gdl90.airplanes.subscribe(airplanes => {
+        airplanes.sort((a, b) => a.proximity.distance - b.proximity.distance);
+        this.airplanes = airplanes;
+      });
+    } else {
+      this.ata.airplanes.subscribe(airplanes => {
+        airplanes.sort((a, b) => a.proximity.distance - b.proximity.distance);
+        this.airplanes = airplanes;
+      });
+    }
+  }
+
+  public get isAutoConnecting(): boolean {
+    return this.gdl90.isAvailable;
   }
 
   private _connect(address: string) {
@@ -61,21 +72,5 @@ export class ListComponent implements AfterViewInit {
     //   return ();
     //   // navigator.geolocation.getCurrentPosition(resolve, () => ({coords: {latitude: 39.015, longitude: -94.565}}));
     // }));
-  }
-
-  ngAfterViewInit(): void {
-      this.zeroconf.watch('_ata-server._tcp.', 'local.').subscribe(result => {
-        console.log('action', result.action, 'service', result.service);
-        if (result.action === 'resolved' && !this.connected) {
-          this.zone.run(() => {
-            const hostname = result.service.hostname;
-            // if (hostname.endsWith('.')) {
-            //   hostname = hostname.slice(0, -1);
-            // }
-
-            this._connect(`${hostname}:${result.service.port}`);
-          });
-        }
-      });
   }
 }

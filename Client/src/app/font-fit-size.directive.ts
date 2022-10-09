@@ -41,9 +41,9 @@ export class FontFitSizeDirective implements AfterContentChecked {
     const newSizeWidth = Math.max(Math.min(parentWidth * ratioWidth, maxSize), minSize);
     const newSizeHeight = Math.max(Math.min(parentHeight * ratioHeight, maxSize), minSize);
     const newSize = Math.min(newSizeHeight, newSizeWidth);
-    element.style.paddingTop = `${headerHeight + 8}px`;
+    element.style.paddingTop = `16px`;
     element.style.fontSize = `${newSize}px`;
-    element.style.alignSelf = 'flex-start';
+    // element.style.alignSelf = 'flex-start';
   }
 
   style(element: HTMLElement) {
