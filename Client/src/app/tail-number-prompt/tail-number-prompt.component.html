@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Update Ownship</h1>
+<div mat-dialog-content>
+  <form class="form">
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>Tail Number</mat-label>
+      <input [matKeyboard] [darkTheme]="true" #nNumberInput matInput [formControl]="nNumber" (enterClick)="blur(nNumberInput)">
+      <button matSuffix mat-button (click)="lookup(nNumberInput)">Lookup</button>
+    </mat-form-field>
+    <mat-form-field class="full-width" appearance="fill">
+      <mat-label>ICOA Number</mat-label>
+      <input [matKeyboard] [darkTheme]="true" #icoaNumberInput matInput [formControl]="icoaNumber" (enterClick)="blur(icoaNumberInput)">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button [mat-dialog-close]="icoaNumber.value" cdkFocusInitial>Ok</button>
+</div>

@@ -5,80 +5,93 @@
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="dark-background">
-    <div class="sidebar">
-      <div style="display: flex;justify-content: space-between">
-        <button mat-stroked-button id="toggleList" (click)="list.toggle()">
-          <mat-icon>menu</mat-icon>
-          List Airplanes
-        </button>
-        <button [hidden]="detailsComponent.isCurrent" mat-button (click)="showDetails($event, ata.currentAirplane)"><mat-icon>clear</mat-icon></button>
+      <div class="sidebar">
+        <div style="display: flex;justify-content: space-between">
+          <button mat-stroked-button id="toggleList" (click)="list.toggle()">
+            <mat-icon>menu</mat-icon>
+            List Airplanes
+          </button>
+          <button [hidden]="detailsComponent.isCurrent" mat-icon-button
+                  (click)="showDetails($event, ata.currentAirplane)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </div>
+        <app-details #detailsComponent style="flex-grow: 1"></app-details>
+        <div id="legend">
+          <div class="item">
+            <div class="icon danger"></div>
+            <span>3 NM</span>
+          </div>
+          <div class="item">
+            <div class="icon caution"></div>
+            <span>6 NM</span>
+          </div>
+          <div class="item">
+            <div class="icon notice"></div>
+            <span>9 NM</span>
+          </div>
+        </div>
       </div>
-      <app-details #detailsComponent></app-details>
-      <div id="legend">
-        <div class="item">
-          <div class="icon danger"></div>
-          <span>3 NM</span>
-        </div>
-        <div class="item">
-          <div class="icon caution"></div>
-          <span>6 NM</span>
-        </div>
-        <div class="item">
-          <div class="icon notice"></div>
-          <span>9 NM</span>
-        </div>
-      </div>
-    </div>
-    <svg id="svg" viewBox="-24 -24 768 768">
+      <svg id="svg" viewBox="-24 -24 768 768">
 
-      <g id="container">
-        <g id="notice">
-          <path d="M 360, 360
+        <g id="container">
+          <g id="notice">
+            <path d="M 360, 360
                          m 0, -360 a 360, 360, 0, 1, 0, 1, 0 Z
                          m 0, 120 a 240, 240, 0, 1, 1, -1, 0 Z"></path>
-          <circle r="360" cx="360" cy="360"></circle>
-        </g>
+            <circle r="360" cx="360" cy="360"></circle>
+          </g>
 
-        <g id="caution">
-          <path d="M 360, 360
+          <g id="caution">
+            <path d="M 360, 360
                          m 0, -240 a 240, 240, 0, 1, 0, 1, 0 Z
                          m 0, 120 a 120, 120, 0, 1, 1, -1, 0 Z"></path>
-          <circle cx="360" cy="360" r="240"></circle>
-        </g>
+            <circle cx="360" cy="360" r="240"></circle>
+          </g>
 
-        <g id="danger">
-          <path d="M 360, 360
+          <g id="danger">
+            <path d="M 360, 360
                          m 0, -120 a 120, 120, 0, 1, 0, 1, 0 Z"></path>
-          <circle r="120" cx="360" cy="360"></circle>
-        </g>
+            <circle r="120" cx="360" cy="360"></circle>
+          </g>
 
-        <circle r="2" cx="360" cy="360" fill="#fff" fill-opacity="1" stroke-width="0"></circle>
+          <circle r="2" cx="360" cy="360" fill="#fff" fill-opacity="1" stroke-width="0"></circle>
 
-        <g id="compass">
-          <g class="north" transform="translate(360 0)">
-            <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
-            <text x="0" y="0">N</text>
+          <g id="compass">
+            <g class="north" transform="translate(360 0)">
+              <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
+              <text x="0" y="0">N</text>
+            </g>
+            <g transform="translate(720 360) rotate(90)">
+              <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
+              <text x="0" y="0">E</text>
+            </g>
+            <g transform="translate(360 720) rotate(180)">
+              <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
+              <text x="0" y="0">S</text>
+            </g>
+            <g transform="translate(0 360) rotate(270)">
+              <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
+              <text x="0" y="0">W</text>
+            </g>
           </g>
-          <g transform="translate(720 360) rotate(90)">
-            <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
-            <text x="0" y="0">E</text>
-          </g>
-          <g transform="translate(360 720) rotate(180)">
-            <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
-            <text x="0" y="0">S</text>
-          </g>
-          <g transform="translate(0 360) rotate(270)">
-            <polygon class="compass-points" points="0 -20 -20 0 0 20 20 0"></polygon>
-            <text x="0" y="0">W</text>
-          </g>
-        </g>
 
-        <g id="airplane" class="airplane safe">
-          <path d="M0,22 L-8,24 L-8,20 L-2,16 L-3,6 L-24,12 L-24,6 L-4,-6 L-4,-12 C-4,-18 -2,-24 0,-24
+          <g id="airplane" class="airplane">
+            <path d="M0,22 L-8,24 L-8,20 L-2,16 L-3,6 L-24,12 L-24,6 L-4,-6 L-4,-12 C-4,-18 -2,-24 0,-24
                C2,-24 4,-18 4,-12 L4,-6 L24,6 L24,12 L3,6 L2,16 L8,20 L8,24 L0,22 Z"></path>
+          </g>
         </g>
-      </g>
-    </svg>
+      </svg>
+    </div>
+    <div id="battery-indicator">
+      <svg id="battery" width="26px" height="12px" viewBox="0 0 26 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <path stroke="none" fill-rule="evenodd" fill="#FFFFFF" d="M22,0 C23.1045695,0 24,0.8954305 24,2 L24,4 L25,4 C25.5522847,4 26,4.44771525 26,5 L26,7 C26,7.55228475 25.5522847,8 25,8 L24,8 L24,10 C24,11.1045695 23.1045695,12 22,12 L2,12 C0.8954305,12 0,11.1045695 0,10 L0,2 C0,0.8954305 0.8954305,0 2,0 L22,0 Z M22,1 L2,1 C1.44771525,1 1,1.44771525 1,2 L1,10 C1,10.5522847 1.44771525,11 2,11 L22,11 C22.5522847,11 23,10.5522847 23,10 L23,2 C23,1.44771525 22.5522847,1 22,1 Z"></path>
+      </svg>
+      <div id="level"></div>
+      <svg id="charge" width="26px" height="12px" viewBox="0 0 26 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <path fill="#FFFFFF" stroke="#000000" stroke-width="1"  d="M 15 -2 L 7 7.5 L 10.5 7.5 L 9 14 L 17 4.5 L 13.5 4.5 Z"></path>
+      </svg>
+      <!--        <rect id="level" fill="#FFFFFF" x="2" y="2" width="20" height="8"></rect>-->
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

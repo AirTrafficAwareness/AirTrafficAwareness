@@ -1,4 +1,4 @@
-import {Capacitor} from '@capacitor/core';
+// import {Capacitor} from '@capacitor/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
@@ -21,8 +21,66 @@ import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {FontFitSizeDirective} from './font-fit-size.directive';
+import {TailNumberPromptComponent} from './tail-number-prompt/tail-number-prompt.component';
+import {IKeyboardLayouts, KeyboardClassKey, MAT_KEYBOARD_LAYOUTS, MatKeyboardModule} from 'angular-onscreen-material-keyboard';
+
+const customLayouts: IKeyboardLayouts = {
+  'Custom': {
+    'name': 'Custom',
+    'keys': [
+      [
+        ['1', '1'],
+        ['2', '2'],
+        ['3', '3'],
+        ['4', '4'],
+        ['5', '5'],
+        ['6', '6'],
+        ['7', '7'],
+        ['8', '8'],
+        ['9', '9'],
+        ['0', '0'],
+        [KeyboardClassKey.Bksp, KeyboardClassKey.Bksp, KeyboardClassKey.Bksp, KeyboardClassKey.Bksp]
+      ],
+      [
+        ['Q', 'Q'],
+        ['W', 'W'],
+        ['E', 'E'],
+        ['R', 'R'],
+        ['T', 'T'],
+        ['Y', 'Y'],
+        ['U', 'U'],
+        ['I', 'I'],
+        ['O', 'O'],
+        ['P', 'P'],
+      ],
+      [
+        ['A', 'A'],
+        ['S', 'S'],
+        ['D', 'D'],
+        ['F', 'F'],
+        ['G', 'G'],
+        ['H', 'H'],
+        ['J', 'J'],
+        ['K', 'K'],
+        ['L', 'L'],
+      ],
+      [
+        ['Z', 'Z'],
+        ['X', 'X'],
+        ['C', 'C'],
+        ['V', 'V'],
+        ['B', 'B'],
+        ['N', 'N'],
+        ['M', 'M'],
+        [KeyboardClassKey.Enter, KeyboardClassKey.Enter, KeyboardClassKey.Enter, KeyboardClassKey.Enter]
+      ]
+    ],
+    'lang': ['en-US']
+  }
+};
+
 
 @NgModule({
   declarations: [
@@ -30,7 +88,8 @@ import {FontFitSizeDirective} from './font-fit-size.directive';
     HomeComponent,
     ListComponent,
     DetailsComponent,
-    FontFitSizeDirective
+    FontFitSizeDirective,
+    TailNumberPromptComponent
   ],
   imports: [
     BrowserModule,
@@ -49,9 +108,13 @@ import {FontFitSizeDirective} from './font-fit-size.directive';
     MatListModule,
     MatSidenavModule,
     MatSnackBarModule,
-    MatToolbarModule
+    MatToolbarModule,
+    ReactiveFormsModule,
+    MatKeyboardModule
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_KEYBOARD_LAYOUTS, useValue: customLayouts }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

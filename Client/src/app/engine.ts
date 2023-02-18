@@ -17,7 +17,7 @@ export class ATAEngine {
   public origin: Coordinate | Airplane;
 
   determineProximity(airplane: Airplane): Airplane {
-    if (faaNumbers[airplane.identifier.toUpperCase()]) {
+    if (!airplane.nNumber && faaNumbers[airplane.identifier.toUpperCase()]) {
       const nNumber = 'N' + faaNumbers[airplane.identifier.toUpperCase()];
       Object.assign(airplane, {
         nNumber
@@ -37,10 +37,10 @@ export class ATAEngine {
 
     const distanceInMeters = calculateDistance(airplane, this.origin);
     if ('identifier' in this.origin && airplane.identifier === this.origin.identifier) {
-      console.log('Calculated ownship', distanceInMeters);
+      // console.log('Calculated ownship', distanceInMeters);
     }
     if (Math.abs(airplane.latitude) > 90 || Math.abs(airplane.longitude) > 180) {
-      return;
+      return undefined;
     }
     Object.assign(airplane, {
       proximity: {

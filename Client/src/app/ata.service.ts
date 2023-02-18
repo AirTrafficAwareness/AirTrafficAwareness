@@ -11,7 +11,7 @@ const wsProtocol = httpProtocol.replace(/^http/, 'ws'); // ws: | wss:
   providedIn: 'root'
 })
 export class ATAService {
-  public airplanes: BehaviorSubject<Airplane[]> = new BehaviorSubject([]);
+  public airplanes: BehaviorSubject<Airplane[]> = new BehaviorSubject<Airplane[]>([]);
   private webSocket;
 
   get currentAirplane() {

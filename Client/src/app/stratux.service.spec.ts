@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GDL90Service } from './gdl90.service';
+import { StratuxService } from './stratux.service';
 
-describe('GDL90Service', () => {
-  let service: GDL90Service;
+describe('StratuxService', () => {
+  let service: StratuxService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(GDL90Service);
+    service = TestBed.inject(StratuxService);
   });
 
   it('should be created', () => {

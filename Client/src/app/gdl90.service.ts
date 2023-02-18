@@ -44,13 +44,13 @@ export class GDL90Service {
         console.log('decoded', decoded);
 
         let updates = false;
-        if (decoded.ownshipReport) {
-          const airplane = trafficReportToAirplane(decoded.ownshipReport);
+        if (decoded['ownshipReport']) {
+          const airplane = trafficReportToAirplane(decoded['ownshipReport']);
           this.engine.origin = airplane;
           updates = true;
           this.airplaneMap[airplane.identifier] = this.engine.determineProximity(airplane);
-        } else if (decoded.trafficReport) {
-          const airplane = trafficReportToAirplane(decoded.trafficReport);
+        } else if (decoded['trafficReport']) {
+          const airplane = trafficReportToAirplane(decoded['trafficReport']);
           updates = true;
           this.airplaneMap[airplane.identifier] = this.engine.determineProximity(airplane);
         }

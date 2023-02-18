@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GDL90Service } from './gdl90.service';
+import { BatteryService } from './battery.service';
 
-describe('GDL90Service', () => {
-  let service: GDL90Service;
+describe('BatteryService', () => {
+  let service: BatteryService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(GDL90Service);
+    service = TestBed.inject(BatteryService);
   });
 
   it('should be created', () => {

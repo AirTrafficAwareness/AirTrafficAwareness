@@ -6,6 +6,8 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import {GDL90Service} from '../gdl90.service';
+import {StratuxService} from '../stratux.service';
+import {BatteryService} from '../battery.service';
 
 @Component({
   selector: 'app-home',
@@ -25,20 +27,41 @@ export class HomeComponent implements OnInit, AfterViewInit {
     private dialog: MatDialog,
     private bottomSheet: MatBottomSheet,
     private changeDetectorRef: ChangeDetectorRef,
+    private battery: BatteryService,
     // private modalController: ModalController,
     // private popoverController: PopoverController,
     public ata: ATAService,
-    public gdl90: GDL90Service) {
+    public gdl90: GDL90Service,
+    public stratux: StratuxService) {
   }
 
   async ngOnInit(): Promise<void> {
-    const svg = document.getElementById('svg') as any as SVGSVGElement;
+    const svg = document.getElementById('svg') as unknown as SVGSVGElement;
     this.container = svg.getElementById('container') as SVGGElement;
     const airplaneNode = svg.getElementById('airplane') as SVGGElement;
     airplaneNode.remove();
     this.airplaneNode = airplaneNode;
-
-    if (this.gdl90.isAvailable) {
+    const batteryLevel = document.getElementById('level');// as unknown as SVGRect;
+    const chargeElement = document.getElementById('charge');
+    const batteryIndicator = document.getElementById('battery-indicator');
+    this.battery.monitor().subscribe(level => {
+      batteryIndicator.style.display = 'block';
+      console.log("battery level", level);
+      if (level.charging) {
+        chargeElement.style.display = 'block';
+        batteryLevel.classList.add('charge');
+      } else if (level.percent < 0.3) {
+        chargeElement.style.display = 'none';
+        batteryLevel.classList.add('danger');
+      } else {
+        chargeElement.style.display = 'none';
+        batteryLevel.classList.remove('charge', 'danger');
+      }
+      batteryLevel.style.width = (20 * level.percent).toString(10) + 'px';
+    });
+    if (this.stratux.isAvailable) {
+      this.stratux.airplanes.subscribe(airplanes => this.updateAirplanes(airplanes));
+    } else if (this.gdl90.isAvailable) {
       this.gdl90.airplanes.subscribe(airplanes => this.updateAirplanes(airplanes));
     } else {
       this.ata.airplanes.subscribe(airplanes => this.updateAirplanes(airplanes));
@@ -46,7 +69,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private updateAirplanes(airplanes: Airplane[]) {
-    this.current = this.gdl90.isAvailable || Boolean(this.ata.currentAirplane);
+    this.current = this.stratux.isAvailable || this.gdl90.isAvailable || Boolean(this.ata.currentAirplane);
 
     // Mark all existing views for deletion.
     Object.values(this.views).forEach(view => view.touched = false);
@@ -66,7 +89,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.gdl90.isAvailable) {
+    if (this.stratux.isAvailable) {
+      this.stratux.startListener();
+    } else if (this.gdl90.isAvailable) {
       this.gdl90.startListener();
     } else if (!this.ata.currentAirplane) {
       setTimeout(() => this.showList());
@@ -74,7 +99,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   selectAirplane(airplane: Airplane) {
-    if (!this.gdl90.isAvailable && !this.ata.currentAirplane) {
+    if (!this.stratux.isAvailable && !this.gdl90.isAvailable && !this.ata.currentAirplane) {
       this.ata.currentAirplane = airplane;
       setTimeout(() => {
         const airplanes = this.ata.airplanes.getValue();
@@ -115,6 +140,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     // return await popover.present();
   }
 
+  private currentAirplane() {
+    if (this.stratux.isAvailable) {
+      return this.stratux.currentAirplane;
+    }
+
+    if (this.gdl90.isAvailable) {
+      return this.gdl90.currentAirplane;
+    }
+
+    return this.ata.currentAirplane;
+  }
+
   private updateAirplane(airplane: Airplane) {
     const {heading, identifier, proximity} = airplane;
 
@@ -132,7 +169,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.views[identifier] = view;
     }
 
-    const currentAirplane = this.gdl90.isAvailable ? this.gdl90.currentAirplane : this.ata.currentAirplane;
+    const currentAirplane = this.currentAirplane();
     if (currentAirplane && identifier === currentAirplane.identifier) {
       this.container.setAttribute('transform', `rotate(${-heading} 360 360)`);
       airplane.proximity.flightZone = 'safe';
@@ -157,8 +194,8 @@ class AirplaneView {
     this.svgElement.classList.add('airplane');
     this.svgElement.classList.add(proximity.flightZone);
 
-    this.svgElement.dataset.distance = `${proximity.distance}`;
-    this.svgElement.dataset.heading = `${airplane.heading}`;
+    this.svgElement.dataset['distance'] = `${proximity.distance}`;
+    this.svgElement.dataset['heading'] = `${airplane.heading}`;
 
     const transform = [
       `translate(${proximity.position.x} ${proximity.position.y})`,

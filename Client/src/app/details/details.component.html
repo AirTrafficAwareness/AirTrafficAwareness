@@ -1,21 +1,24 @@
 <div *ngIf="airplane">
   <div class="details">
-    <h2 class="mat-title identifier">{{(airplane.flightNumber || "Unknown").trim() | uppercase}}
-      ({{airplane.nNumber | uppercase}})</h2>
+    <h2 class="mat-title identifier">
+      {{(airplane.flightNumber || airplane.nNumber || "N/A").trim() | uppercase}}
+      ({{airplane.identifier | uppercase}})
+      <button [hidden]="!isCurrent" mat-icon-button (click)="editNNumber($event)"><mat-icon>edit</mat-icon></button>
+    </h2>
     <span class="mat-subheading-2">{{airplane.latitude | number:'1.3-3'}}
       , {{airplane.longitude | number:'1.3-3'}}</span>
   </div>
-  <mat-grid-list cols="2" [rowHeight]="isCurrent ? '150px' : '150px'">
+  <mat-grid-list cols="2" [rowHeight]="isCurrent ? '150px' : '150px'" gutterSize="8px">
     <mat-grid-tile [colspan]="isCurrent ? 2 : 1">
-      <mat-grid-tile-header>
-        Ground Speed
+      <mat-grid-tile-header [style.background-color]="'#2C2C2E'" [style.border-radius]="'8px'" [style.justify-content]="'center'">
+        GROUND SPEED
       </mat-grid-tile-header>
       <div appFontFitSize [maxSize]="isCurrent ? '60' : '24'">
         {{airplane.groundSpeed | number:'1.0-0'}} kt
       </div>
     </mat-grid-tile>
     <mat-grid-tile *ngIf="!isCurrent">
-      <mat-grid-tile-header>
+      <mat-grid-tile-header [style.background-color]="'#2C2C2E'" [style.border-radius]="'8px'" [style.justify-content]="'center'">
         DISTANCE
       </mat-grid-tile-header>
       <div appFontFitSize maxSize="24">
@@ -23,7 +26,7 @@
       </div>
     </mat-grid-tile>
     <mat-grid-tile>
-      <mat-grid-tile-header>
+      <mat-grid-tile-header [style.background-color]="'#2C2C2E'" [style.border-radius]="'8px'" [style.justify-content]="'center'">
         HEADING
       </mat-grid-tile-header>
       <div appFontFitSize maxSize="24">
@@ -31,7 +34,7 @@
       </div>
     </mat-grid-tile>
     <mat-grid-tile>
-      <mat-grid-tile-header>
+      <mat-grid-tile-header [style.background-color]="'#2C2C2E'" [style.border-radius]="'8px'" [style.justify-content]="'center'">
         ALTITUDE
       </mat-grid-tile-header>
       <div appFontFitSize maxSize="24">

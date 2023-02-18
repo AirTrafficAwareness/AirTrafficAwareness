@@ -326,6 +326,7 @@ export class GDL90 {
         case 3:
           return 'rc';
       }
+      return undefined;
     })();
     const firmwareVersion = `v${message[4]}.${message[5]}${versionType}${message[7]}`;
     const hardwareRevisionCode = this.toHexString(message.slice(8, 12));
@@ -458,6 +459,7 @@ export class GDL90 {
         case 1:
           return 'Traffic Alert';
       }
+      return undefined;
     })();
     // byte 1 bits: sssstttt
     // message[1] & 0x0f = sssstttt & 0b00001111 = 0000tttt
@@ -477,6 +479,7 @@ export class GDL90 {
         case 5:
           return 'Ground Station Beacon';
       }
+      return undefined;
     })();
     const participantAddress = [
       message[2], message[3], message[4]
@@ -515,6 +518,7 @@ export class GDL90 {
           case 3:
             return 'Heading (True)';
         }
+        return undefined;
       })(),
       report: misc & 0b0100 ? 'extrapolated' : 'updated',
       state: misc & 0b1000 ? 'airborne' : 'on ground'
@@ -550,6 +554,7 @@ export class GDL90 {
           case 11:
             return 'HPL < 7.5 m & VPL < 11 m';
         }
+        return undefined;
       })(),
       accuracy: (() => {
         switch (NACp) {
@@ -578,6 +583,7 @@ export class GDL90 {
           case 11:
             return 'HFOM < 3 m & VFOM < 4 m';
         }
+        return undefined;
       })()
     };
 
@@ -643,6 +649,7 @@ export class GDL90 {
         case 21:
           return 'Line Obstacle';
       }
+      return undefined;
     })();
     const callSign = this.toString(message.slice(19, 27));
     const priorityCode = (message[27] & 0xf0) >> 4;
@@ -667,6 +674,7 @@ export class GDL90 {
       if (priorityCode >= 7 && priorityCode <= 15) {
         return 'reserved';
       }
+      return undefined;
     })();
 
     const report = {

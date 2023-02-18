@@ -4,6 +4,7 @@ import {ATAService} from '../ata.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {GDL90Service} from '../gdl90.service';
+import {StratuxService} from '../stratux.service';
 
 @Component({
   selector: 'app-list',
@@ -23,8 +24,15 @@ export class ListComponent {
     @Optional() public dialogRef: MatDialogRef<ListComponent>,
     private snackBar: MatSnackBar,
     private ata: ATAService,
-    private gdl90: GDL90Service) {
-    if (this.gdl90.isAvailable) {
+    private gdl90: GDL90Service,
+    private stratux: StratuxService) {
+    if (this.stratux.isAvailable) {
+      this.connected = true;
+      this.stratux.airplanes.subscribe(airplanes => {
+        airplanes.sort((a, b) => a.proximity.distance - b.proximity.distance);
+        this.airplanes = airplanes;
+      });
+    } else if (this.gdl90.isAvailable) {
       this.connected = true;
       this.gdl90.airplanes.subscribe(airplanes => {
         airplanes.sort((a, b) => a.proximity.distance - b.proximity.distance);
@@ -39,7 +47,7 @@ export class ListComponent {
   }
 
   public get isAutoConnecting(): boolean {
-    return this.gdl90.isAvailable;
+    return this.stratux.isAvailable || this.gdl90.isAvailable;
   }
 
   private _connect(address: string) {
